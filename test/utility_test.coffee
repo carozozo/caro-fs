@@ -1,5 +1,5 @@
 do ->
-describe 'FileSystem', ->
+describe 'Utility', ->
   it 'fsExists', ->
     r = cf.fsExists('./a/b', 'c', (e, path) ->
     );
