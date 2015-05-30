@@ -33,12 +33,11 @@ self.normalizePath = (path) ->
 ###
 self.isFullPath = (path) ->
   pass = true
-  caro.each(arguments, (i, val) ->
-    val = caro.normalizePath(val)
+  caro.forEach(arguments, (val) ->
+    val = self.normalizePath(val)
     if val.indexOf(absolutePath) != 0
       pass = false
       return false
-    return
   )
   pass
 
@@ -58,7 +57,7 @@ self.getDirPath = (path) ->
 ###
 self.getFileName = (path, getFull = true) ->
   if !getFull
-    extendName = caro.getExtendName(path)
+    extendName = self.getExtendName(path)
     return nPath.basename(path, extendName)
   nPath.basename path
 
@@ -80,6 +79,6 @@ self.getExtendName = (path, withDot = true) ->
 # @returns {*|string}
 ###
 self.coverToFullPath = (path) ->
-  path = caro.normalizePath.apply(this, arguments)
-  path = nPath.join(absolutePath, path) if !caro.isFullPath(path)
+  path = self.normalizePath.apply(this, arguments)
+  path = nPath.join(absolutePath, path) if !self.isFullPath(path)
   path

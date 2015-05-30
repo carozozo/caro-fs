@@ -50,8 +50,8 @@ self.normalizePath = function(path) {
 self.isFullPath = function(path) {
   var pass;
   pass = true;
-  caro.each(arguments, function(i, val) {
-    val = caro.normalizePath(val);
+  caro.forEach(arguments, function(val) {
+    val = self.normalizePath(val);
     if (val.indexOf(absolutePath) !== 0) {
       pass = false;
       return false;
@@ -85,7 +85,7 @@ self.getFileName = function(path, getFull) {
     getFull = true;
   }
   if (!getFull) {
-    extendName = caro.getExtendName(path);
+    extendName = self.getExtendName(path);
     return nPath.basename(path, extendName);
   }
   return nPath.basename(path);
@@ -120,8 +120,8 @@ self.getExtendName = function(path, withDot) {
  */
 
 self.coverToFullPath = function(path) {
-  path = caro.normalizePath.apply(this, arguments);
-  if (!caro.isFullPath(path)) {
+  path = self.normalizePath.apply(this, arguments);
+  if (!self.isFullPath(path)) {
     path = nPath.join(absolutePath, path);
   }
   return path;

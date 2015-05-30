@@ -8,10 +8,57 @@ $ npm install caro-fs
 
 ```javascript
 var cf = require('caro-fs');
-cffsExists(['caro-fs.js']); // true
+cf.fsExists(['caro-fs.js']); // true
 ```
 
-**★[Utility](#utility)** | **[Path](#path)** | **[File](#file)** | **[Dir](#Dir)**
+**[Dir](#Dir)** | **[File](#file)** | **[Path](#path)** | **★[Utility](#utility)** 
+
+### Path
+[Back to Index](#index)
+- **setAbsolutePath(path) - set root absolute path**
+```javascript
+    var r = caro.setAbsolutePath('/path/from/root'); // '/path/from/root'
+    var r2 = caro.setAbsolutePath('/path2//from\root'); // '/path2/from\root'
+```
+- **getAbsolutePath(path) - get root absolute path**
+```javascript
+    caro.setAbsolutePath('/path/from/root');
+    var r = caro.getAbsolutePath(); // '/path/from/root'
+```
+- **normalizePath(path...) - 正規化路徑**
+```javascript
+    var r = caro.normalizePath('path//seems/not/exists'); // 'path/seems/not/exists'
+    var r2 = caro.normalizePath('path', '\exists'); // 'path/exists'
+```
+- **isFullPath(path...) - 確認是否為絕對路徑**
+```javascript
+    caro.setAbsolutePath('/path/root');
+    var r = caro.isFullPath('/path/root/caro.js'); // true
+    var r2 = caro.isFullPath('/path/root/caro.js', '/path2'); // false
+```
+- **getDirPath(path) - 取得所在的資料夾路徑**
+```javascript
+    var r = caro.getDirPath('/path/from/root'); // '/path/from'
+    var r2 = caro.getDirPath('/path/from/root/caro.js'); // '/path/from/root'
+```
+- **getFileName(path [getFull=true]) - 取得檔案名稱**
+```javascript
+    var r = caro.getFileName('/path/from/root'); // 'root'
+    var r2 = caro.getFileName('/path/from/root/caro.js'); // 'caro.js'
+    var r3 = caro.getFileName('/path/from/root/caro.js', false); // 'caro'
+```
+- **getExtendName(path [withDot=true]) - 取得附檔名**
+```javascript
+    var r = caro.getExtendName('caro.js'); // '.js'
+    var r2 = caro.getExtendName('caro.js.bk', false); // 'bk'
+```
+- **coverToFullPath(path) - 轉為絕對路徑**
+```javascript
+    caro.setAbsolutePath('/path/from/root');
+    var r = caro.coverToFullPath('caro.js');  // '/path/from/root/caro.js'
+    var r2 = caro.coverToFullPath('other', 'caro.js'); // '/path/from/root/other/caro.js'
+    var r3 = caro.coverToFullPath('/path/from/root/caro.js'); // '/path/from/root/caro.js'
+```
 
 ### FileSystem
 [Back to Index](#index)
@@ -131,51 +178,4 @@ var r3 = caro.getFsSize(123000, 5, 'gib'); // 0.1173
 var r = caro.humanFeSize('./caro.js'); // e.g. '439.1 KB'
 var r2 = caro.humanFeSize('./caro.js', 3); // e.g. '439.078 KB'
 var r3 = caro.humanFeSize(10000000, 2, false); // '9.54 MiB'
-```
-
-### Path
-[Back to Index](#index)
-- **setAbsolutePath(path) - 定義絕對路徑根目錄**
-```javascript
-    var r = caro.setAbsolutePath('/path/from/root'); // '/path/from/root'
-    var r2 = caro.setAbsolutePath('/path2//from\root'); // '/path2/from\root'
-```
-- **getAbsolutePath(path) - 取得絕對路徑根目錄**
-```javascript
-    caro.setAbsolutePath('/path/from/root');
-    var r = caro.getAbsolutePath(); // '/path/from/root'
-```
-- **normalizePath(path...) - 正規化路徑**
-```javascript
-    var r = caro.normalizePath('path//seems/not/exists'); // 'path/seems/not/exists'
-    var r2 = caro.normalizePath('path', '\exists'); // 'path/exists'
-```
-- **isFullPath(path...) - 確認是否為絕對路徑**
-```javascript
-    caro.setAbsolutePath('/path/root');
-    var r = caro.isFullPath('/path/root/caro.js'); // true
-    var r2 = caro.isFullPath('/path/root/caro.js', '/path2'); // false
-```
-- **getDirPath(path) - 取得所在的資料夾路徑**
-```javascript
-    var r = caro.getDirPath('/path/from/root'); // '/path/from'
-    var r2 = caro.getDirPath('/path/from/root/caro.js'); // '/path/from/root'
-```
-- **getFileName(path [getFull=true]) - 取得檔案名稱**
-```javascript
-    var r = caro.getFileName('/path/from/root'); // 'root'
-    var r2 = caro.getFileName('/path/from/root/caro.js'); // 'caro.js'
-    var r3 = caro.getFileName('/path/from/root/caro.js', false); // 'caro'
-```
-- **getExtendName(path [withDot=true]) - 取得附檔名**
-```javascript
-    var r = caro.getExtendName('caro.js'); // '.js'
-    var r2 = caro.getExtendName('caro.js.bk', false); // 'bk'
-```
-- **coverToFullPath(path) - 轉為絕對路徑**
-```javascript
-    caro.setAbsolutePath('/path/from/root');
-    var r = caro.coverToFullPath('caro.js');  // '/path/from/root/caro.js'
-    var r2 = caro.coverToFullPath('other', 'caro.js'); // '/path/from/root/other/caro.js'
-    var r3 = caro.coverToFullPath('/path/from/root/caro.js'); // '/path/from/root/caro.js'
 ```
