@@ -8,8 +8,7 @@
   },
   "main": "caro-fs.js",
   "files": [
-    "caro-fs.js",
-    "caro-fs.min.js"
+    "caro-fs.js"
   ],
   "repository": {
     "type": "git",

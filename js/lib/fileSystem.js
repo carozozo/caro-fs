@@ -1,108 +1,378 @@
 
 /**
  * FileSystem
- * @author Caro.Huang
  */
-(function() {
-  var caro, coverToFalseIfEmptyArr, fileSizeUnits1, fileSizeUnits2, getArgs, getFileSize, nFs, self, showErr, traceMode;
-  self = cf;
-  caro = require('caro');
-  nFs = require('fs');
-  fileSizeUnits1 = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-  traceMode = false;
-  showErr = function(e) {
-    if (traceMode) {
-      return console.error(e);
-    }
-  };
-  getArgs = function(args) {
-    var aArr, aBool, aFn, aNum, aStr;
-    aStr = [];
-    aFn = [];
-    aBool = [];
-    aArr = [];
-    aNum = [];
-    caro.each(args, function(i, arg) {
-      if (caro.isFunction(arg)) {
-        aFn.push(arg);
-        return;
-      }
-      if (caro.isBoolean(arg)) {
-        aBool.push(arg);
-        return;
-      }
-      if (caro.isString(arg)) {
-        aStr.push(arg);
-        return;
-      }
-      if (caro.isArray(arg)) {
-        aArr.push(arg);
-        return;
-      }
-      if (caro.isNumber(arg)) {
-        aNum.push(arg);
-        return;
-      }
-    });
-    return {
-      fn: aFn,
-      bool: aBool,
-      str: aStr,
-      arr: aArr,
-      num: aNum
-    };
-  };
-  coverToFalseIfEmptyArr = function(arr) {
-    if (arr.length < 1) {
-      return false;
-    }
-    return arr;
-  };
-  getFileSize = function(path) {
-    var status;
-    status = caro.getFsStat(path);
-    if (status) {
-      return status.size;
-    }
-    if (caro.isNumber(path)) {
-      return path;
-    }
-    return null;
-  };
+var fileSizeUnits1, fileSizeUnits2;
 
-  /**
-   * set trace-mode, will console.error when got exception
-   * @returns {boolean}
-   */
-  self.setFsTrace = function(bool) {
-    return traceMode = bool === true;
-  };
+fileSizeUnits1 = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
-  /**
-   * read file content, return false if failed
-   * @param {string} path
-   * @param {?string} [encoding=utf8]
-   * @param {?string} [flag=null]
-   * @returns {*}
-   */
-  self.readFileCaro = function(path, encoding, flag) {
-    var e;
-    if (encoding == null) {
-      encoding = 'utf8';
-    }
-    if (flag == null) {
-      flag = null;
-    }
+fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+
+
+/**
+ * check file if exists, return false when anyone is false
+ * @param {...string} path
+ * @param {function} [cb] the callback-function for each path
+ * @returns {*}
+ */
+
+self.fsExists = function(path, cb) {
+  var aPath, args, pass;
+  pass = true;
+  args = getArgs(arguments);
+  aPath = args.str;
+  cb = args.fn[0];
+  caro.each(aPath, function(i, path) {
+    var e, err;
+    err = false;
     try {
-      return nFs.readFileSync(path, {
-        encoding: encoding,
-        flag: flag
-      });
+      if (!nFs.existsSync(path)) {
+        pass = false;
+      }
     } catch (_error) {
       e = _error;
       showErr(e);
+      pass = false;
+      err = e;
     }
-    return false;
+    caro.executeIfFn(cb, err, path);
+  });
+  return pass;
+};
+
+
+/**
+ * check if folder, return false when anyone is false
+ * @param {...string} path
+ * @param {function} [cb] the callback-function for each path
+ * @returns {*}
+ */
+
+self.isFsDir = function(path, cb) {
+  var aPath, args, pass;
+  pass = true;
+  args = getArgs(arguments);
+  aPath = args.str;
+  cb = args.fn[0];
+  caro.each(aPath, function(i, path) {
+    var e, err, stat;
+    err = false;
+    try {
+      stat = caro.getFsStat(path);
+      pass && (pass = stat.isDirectory());
+    } catch (_error) {
+      e = _error;
+      showErr(e);
+      pass = false;
+      err = e;
+    }
+    caro.executeIfFn(cb, err, path);
+  });
+  return pass;
+};
+
+
+/**
+ * check if file, return false when anyone is false
+ * @param {...string} path
+ * @param {function} [cb] the callback-function for each path
+ * @returns {*}
+ */
+
+self.isFsFile = function(path) {
+  var aPath, args, cb, pass;
+  pass = true;
+  args = getArgs(arguments);
+  aPath = args.str;
+  cb = args.fn[0];
+  caro.each(aPath, function(i, path) {
+    var e, err, stat;
+    err = false;
+    try {
+      stat = caro.getFsStat(path);
+      pass && (pass = stat.isFile());
+    } catch (_error) {
+      e = _error;
+      showErr(e);
+      pass = false;
+      err = e;
+    }
+    caro.executeIfFn(cb, err, path);
+  });
+  return pass;
+};
+
+
+/**
+ * check if symbolic link, return false when anyone is false
+ * @param {function} [cb] the callback-function for each path
+ * @param {...string} path
+ * @returns {*}
+ */
+
+self.isFsSymlink = function(path) {
+  var aPath, args, cb, pass;
+  pass = true;
+  args = getArgs(arguments);
+  aPath = args.str;
+  cb = args.fn[0];
+  caro.each(aPath, function(i, path) {
+    var e, err, stat;
+    err = false;
+    try {
+      stat = caro.getFsStat(path);
+      pass && (pass = stat.isSymbolicLink());
+    } catch (_error) {
+      e = _error;
+      showErr(e);
+      pass = false;
+      err = e;
+    }
+    caro.executeIfFn(cb, err, path);
+  });
+  return pass;
+};
+
+
+/**
+ * @param {string} path
+ * @returns {string}
+ */
+
+self.getFileType = function(path) {
+  var r;
+  r = '';
+  if (caro.isFsDir(path)) {
+    r = 'dir';
+  }
+  if (caro.isFsFile(path)) {
+    r = 'file';
+  }
+  if (caro.isFsSymlink(path)) {
+    r = 'link';
+  }
+  return r;
+};
+
+
+/**
+ * delete file/folder recursively
+ * @param {...string} path
+ * @param {function} [cb] the callback-function for each path
+ * @param {boolean} [force=false] force-delete even not empty
+ * @returns {boolean}
+ */
+
+self.deleteFs = function(path, cb, force) {
+  var aPath, args, deleteFileOrDir, err, pass, tryAndCatchErr;
+  err = [];
+  pass = true;
+  args = getArgs(arguments);
+  aPath = args.str;
+  cb = args.fn[0];
+  force = args.bool[0];
+  tryAndCatchErr = function(fn) {
+    var e;
+    try {
+      fn();
+    } catch (_error) {
+      e = _error;
+      showErr(e);
+      pass = false;
+      err.push(e);
+    }
   };
-})();
+  deleteFileOrDir = function(path) {
+    if (caro.isFsFile(path) && force) {
+      tryAndCatchErr(function() {
+        return nFs.unlinkSync(path);
+      });
+      return;
+    }
+    if (caro.isFsDir(path)) {
+      tryAndCatchErr(function() {
+        var files;
+        files = nFs.readdirSync(path);
+        caro.each(files, function(i, file) {
+          var subPath;
+          subPath = caro.normalizePath(path, file);
+          deleteFileOrDir(subPath);
+        });
+      });
+    }
+    tryAndCatchErr(function() {
+      return nFs.rmdirSync(path);
+    });
+    return err;
+  };
+  caro.each(aPath, function(i, dirPath) {
+    err = [];
+    err = deleteFileOrDir(dirPath);
+    err = coverToFalseIfEmptyArr(err);
+    return caro.executeIfFn(cb, err, dirPath);
+  });
+  return pass;
+};
+
+
+/**
+ * @param {string|...[]} path the file-path, you can also set as [path,newPath]
+ * @param {string|...[]} newPath the new-path, you can also set as [path,newPath]
+ * @param {function} [cb] the callback-function for each path
+ * @param {boolean} [force=false] will create folder if there is no path for newPath
+ * @returns {boolean}
+ */
+
+self.renameFs = function(path, newPath, cb, force) {
+  var aPathMap, args, pass;
+  if (force == null) {
+    force = false;
+  }
+  pass = true;
+  aPathMap = [];
+  args = getArgs(arguments);
+  cb = args.fn[0];
+  force = args.bool[0];
+  aPathMap = (function() {
+    if (caro.isString(path) && caro.isString(newPath)) {
+      return [path, newPath];
+    }
+    return args.arr;
+  })();
+  caro.each(aPathMap, function(i, pathMap) {
+    var dirPath2, e, err, path1, path2;
+    err = false;
+    path1 = pathMap[0];
+    path2 = pathMap[1];
+    try {
+      if (force && caro.fsExists(path1)) {
+        dirPath2 = caro.getDirPath(path2);
+        caro.createDir(dirPath2);
+      }
+      nFs.renameSync(path1, path2);
+    } catch (_error) {
+      e = _error;
+      showErr(e);
+      pass = false;
+      err = e;
+    }
+    caro.executeIfFn(cb, err, path1, path2);
+  });
+  return pass;
+};
+
+
+/**
+ * get file stat
+ * @param {string} path
+ * @param {string} [type=l] s = statSync, l = lstatSync, f = fstatSync
+ * @returns {*}
+ */
+
+self.getFsStat = function(path, type) {
+  var aType, e, stat;
+  if (type == null) {
+    type = 'l';
+  }
+  stat = null;
+  aType = ['l', 's', 'f'];
+  type = aType.indexOf(type) > -1 ? type : aType[0];
+  try {
+    switch (type) {
+      case 's':
+        stat = nFs.lstatSync(path);
+        break;
+      case 'f':
+        stat = nFs.fstatSync(path);
+        break;
+      default:
+        stat = nFs.statSync(path);
+        break;
+    }
+  } catch (_error) {
+    e = _error;
+    showErr(e);
+  }
+  return stat;
+};
+
+
+/**
+ * get file size, default in bytes or set by unit
+ * @param {number|string} path file-path or bytes
+ * @param {number} [fixed=1] decimals of float
+ * @param {string} [unit] the file-size unit
+ * @returns {}
+ */
+
+self.getFsSize = function(path, fixed, unit) {
+  var args, bytes, count, index, index1, index2, si, thresh;
+  if (fixed == null) {
+    fixed = 1;
+  }
+  bytes = getFileSize(path);
+  if (bytes === null) {
+    return bytes;
+  }
+  args = caro.objToArr(arguments);
+  args.shift();
+  args = getArgs(args);
+  fixed = caro.coverToInt(args.num[0]);
+  fixed = fixed > -1 ? fixed : 1;
+  unit = args.str[0];
+  si = true;
+  unit = caro.upperFirst(unit);
+  unit = caro.upperStr(unit, {
+    start: -1
+  });
+  index1 = fileSizeUnits1.indexOf(unit);
+  index2 = fileSizeUnits2.indexOf(unit);
+  if (index2 > -1) {
+    si = false;
+  }
+  index = si ? index1 : index2;
+  if (index < 0) {
+    return bytes;
+  }
+  count = 0;
+  thresh = si ? 1000 : 1024;
+  while (count < index) {
+    bytes /= thresh;
+    ++count;
+  }
+  return caro.coverToNum(bytes.toFixed(fixed));
+};
+
+
+/**
+ * get file size for human-reading
+ * @param {number|string} path file-path or bytes
+ * @param {number} [fixed=1] decimals of float
+ * @param {boolean} [si=true] size-type, true decimal, false as binary
+ * @returns {string}
+ */
+
+self.humanFeSize = function(path, fixed, si) {
+  var aUnit, bytes, thresh, u;
+  if (fixed == null) {
+    fixed = 1;
+  }
+  if (si == null) {
+    si = true;
+  }
+  bytes = getFileSize(path);
+  if (bytes === null) {
+    return bytes;
+  }
+  thresh = si ? 1000 : 1024;
+  if (bytes < thresh) {
+    return bytes + ' B';
+  }
+  aUnit = si ? fileSizeUnits1 : fileSizeUnits2;
+  u = -1;
+  while (bytes >= thresh) {
+    bytes /= thresh;
+    ++u;
+  }
+  return caro.coverToFixed(bytes, fixed) + ' ' + aUnit[u];
+};
