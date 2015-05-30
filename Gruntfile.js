@@ -35,17 +35,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        uglify: {
-            options: {
-                stripBanners: true,
-                banner: banner
-            },
-            dist: {
-                files: {
-                    '<%= pkg.name %>.min.js': [pkgFile]
-                }
-            }
-        },
         mochaTest: {
             test: {
                 options: {
@@ -68,8 +57,6 @@ module.exports = function (grunt) {
 
     // coffee-script 轉 js
     grunt.loadNpmTasks('grunt-contrib-coffee');
-    // 檔案最小化
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     // unit test
     grunt.loadNpmTasks('grunt-mocha-test');
 
