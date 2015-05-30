@@ -2,45 +2,7 @@
 /**
  * Dir
  */
-var coverToFalseIfEmptyArr, getArgs;
-
-getArgs = function(args) {
-  var aArr, aBool, aFn, aNum, aStr;
-  aStr = [];
-  aFn = [];
-  aBool = [];
-  aArr = [];
-  aNum = [];
-  caro.each(args, function(i, arg) {
-    if (caro.isFunction(arg)) {
-      aFn.push(arg);
-      return;
-    }
-    if (caro.isBoolean(arg)) {
-      aBool.push(arg);
-      return;
-    }
-    if (caro.isString(arg)) {
-      aStr.push(arg);
-      return;
-    }
-    if (caro.isArray(arg)) {
-      aArr.push(arg);
-      return;
-    }
-    if (caro.isNumber(arg)) {
-      aNum.push(arg);
-      return;
-    }
-  });
-  return {
-    fn: aFn,
-    bool: aBool,
-    str: aStr,
-    arr: aArr,
-    num: aNum
-  };
-};
+var coverToFalseIfEmptyArr;
 
 coverToFalseIfEmptyArr = function(arr) {
   if (arr.length < 1) {
@@ -63,19 +25,19 @@ self.isEmptyDir = function(path, cb) {
   args = getArgs(arguments);
   aPath = args.str;
   cb = args.fn[0];
-  caro.each(aPath, function(i, path) {
+  caro.forEach(aPath, function(path) {
     var count, e;
     try {
       count = nFs.readdirSync(path);
       if (count.length > 0) {
         pass = false;
       }
-      caro.executeIfFn(cb, false, path);
+      return caro.executeIfFn(cb, false, path);
     } catch (_error) {
       e = _error;
       showErr(e);
       pass = false;
-      caro.executeIfFn(cb, e, path);
+      return caro.executeIfFn(cb, e, path);
     }
   });
   return pass;
@@ -94,7 +56,7 @@ self.isEmptyDir = function(path, cb) {
  * @returns {*}
  */
 
-self.readDirCb = function(path, cb, opt) {
+self.readDir = function(path, cb, opt) {
   var countLayer, getByExtend, getDir, getFile, maxLayer, pushFile, readDir;
   if (opt == null) {
     opt = {};
@@ -108,7 +70,7 @@ self.readDirCb = function(path, cb, opt) {
     r = false;
     if (opt.getByExtend) {
       r = caro.splitStr(opt.getByExtend, ',');
-      caro.each(r, function(i, extendName) {
+      caro.forEach(r, function(extendName, i) {
         r[i] = caro.addHead(extendName, '.');
       });
     }
@@ -135,15 +97,15 @@ self.readDirCb = function(path, cb, opt) {
       cb(e);
     }
     layer++;
-    caro.each(files, function(i, basename) {
+    return caro.forEach(files, function(basename, i) {
       var dirPath, extendName, filePath, fileType, filename, fullDirPath, fullPath, oFileInfo;
-      filename = caro.getFileName(basename, false);
-      extendName = caro.getExtendName(basename);
-      filePath = caro.normalizePath(rootPath, basename);
-      dirPath = caro.getDirPath(filePath);
-      fullPath = caro.coverToFullPath(filePath);
-      fullDirPath = caro.getDirPath(fullPath);
-      fileType = caro.getFileType(filePath);
+      filename = self.getFileName(basename, false);
+      extendName = self.getExtendName(basename);
+      filePath = self.normalizePath(rootPath, basename);
+      dirPath = self.getDirPath(filePath);
+      fullPath = self.coverToFullPath(filePath);
+      fullDirPath = self.getDirPath(fullPath);
+      fileType = self.getFileType(filePath);
       oFileInfo = {
         filename: filename,
         extendName: extendName,
@@ -156,19 +118,20 @@ self.readDirCb = function(path, cb, opt) {
         layer: layer - 1,
         index: i
       };
-      if (caro.isFsDir(filePath)) {
+      if (self.isFsDir(filePath)) {
         if (getDir && pushFile(oFileInfo) === false) {
           return false;
         }
         readDir(filePath, layer);
         return;
       }
-      if (caro.isFsFile(filePath) && getFile && pushFile(oFileInfo) === false) {
+      if (self.isFsFile(filePath) && getFile && pushFile(oFileInfo) === false) {
         return false;
       }
     });
   };
   readDir(path, countLayer);
+  return null;
 };
 
 
@@ -190,25 +153,25 @@ self.createDir = function(path, cb) {
     var subPath;
     subPath = '';
     aPath = caro.splitStr(dirPath, ['\\', '/']);
-    caro.each(aPath, function(i, eachDir) {
+    caro.forEach(aPath, function(eachDir) {
       var e, exists;
-      subPath = caro.normalizePath(subPath, eachDir);
-      exists = caro.fsExists(subPath);
+      subPath = self.normalizePath(subPath, eachDir);
+      exists = self.fsExists(subPath);
       if (exists) {
         return;
       }
       try {
-        nFs.mkdirSync(subPath);
+        return nFs.mkdirSync(subPath);
       } catch (_error) {
         e = _error;
         showErr(e);
         pass = false;
-        err.push(e);
+        return err.push(e);
       }
     });
     return err;
   };
-  caro.each(aPath, function(i, dirPath) {
+  caro.forEach(aPath, function(dirPath) {
     err = [];
     err = createDir(dirPath);
     err = coverToFalseIfEmptyArr(err);

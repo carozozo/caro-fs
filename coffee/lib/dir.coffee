@@ -1,37 +1,9 @@
 ###*
 # Dir
 ###
-getArgs = (args) ->
-  aStr = []
-  aFn = []
-  aBool = []
-  aArr = []
-  aNum = []
-  caro.each args, (i, arg) ->
-    if caro.isFunction(arg)
-      aFn.push arg
-      return
-    if caro.isBoolean(arg)
-      aBool.push arg
-      return
-    if caro.isString(arg)
-      aStr.push arg
-      return
-    if caro.isArray(arg)
-      aArr.push arg
-      return
-    if caro.isNumber(arg)
-      aNum.push arg
-      return
-    return
-  fn: aFn
-  bool: aBool
-  str: aStr
-  arr: aArr
-  num: aNum
 coverToFalseIfEmptyArr = (arr) ->
   return false if arr.length < 1
-  arr
+  return arr
 
 ###*
 # check if empty-folder, return false if anyone is false
@@ -44,7 +16,7 @@ self.isEmptyDir = (path, cb) ->
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
-  caro.each aPath, (i, path) ->
+  caro.forEach(aPath, (path) ->
     try
       count = nFs.readdirSync(path)
       pass = false if count.length > 0
@@ -53,8 +25,8 @@ self.isEmptyDir = (path, cb) ->
       showErr(e)
       pass = false
       caro.executeIfFn(cb, e, path)
-    return
-  pass
+  )
+  return pass
 
 ###*
 # get files under path
@@ -67,7 +39,7 @@ self.isEmptyDir = (path, cb) ->
 # @param {boolean|string|[]} [opt.getByExtend=false] if set as string, will only return files including same extend-name
 # @returns {*}
 ###
-self.readDirCb = (path, cb, opt = {}) ->
+self.readDir = (path, cb, opt = {}) ->
   countLayer = 0
   maxLayer = if opt.maxLayer? then parseInt(opt.maxLayer, 10) else 1
   getDir = opt.getDir != false
@@ -76,10 +48,11 @@ self.readDirCb = (path, cb, opt = {}) ->
     r = false
     if opt.getByExtend
       r = caro.splitStr(opt.getByExtend, ',')
-      caro.each r, (i, extendName) ->
+      caro.forEach(r, (extendName, i) ->
         r[i] = caro.addHead(extendName, '.')
         return
-    r
+      )
+    return r
   pushFile = (oFileInfo) ->
     extendName = oFileInfo.extendName
     return if getByExtend and getByExtend.indexOf(extendName) < 0
@@ -93,14 +66,14 @@ self.readDirCb = (path, cb, opt = {}) ->
       showErr(e)
       cb e
     layer++
-    caro.each files, (i, basename) ->
-      filename = caro.getFileName(basename, false)
-      extendName = caro.getExtendName(basename)
-      filePath = caro.normalizePath(rootPath, basename)
-      dirPath = caro.getDirPath(filePath)
-      fullPath = caro.coverToFullPath(filePath)
-      fullDirPath = caro.getDirPath(fullPath)
-      fileType = caro.getFileType(filePath)
+    caro.forEach(files, (basename, i) ->
+      filename = self.getFileName(basename, false)
+      extendName = self.getExtendName(basename)
+      filePath = self.normalizePath(rootPath, basename)
+      dirPath = self.getDirPath(filePath)
+      fullPath = self.coverToFullPath(filePath)
+      fullDirPath = self.getDirPath(fullPath)
+      fileType = self.getFileType(filePath)
       oFileInfo =
         filename: filename
         extendName: extendName
@@ -112,15 +85,14 @@ self.readDirCb = (path, cb, opt = {}) ->
         fileType: fileType
         layer: layer - 1
         index: i
-      if caro.isFsDir(filePath)
+      if self.isFsDir(filePath)
         return false if getDir and pushFile(oFileInfo) == false
         readDir filePath, layer
         return
-      return false if caro.isFsFile(filePath) and getFile and pushFile(oFileInfo) == false
-      return
-    return
+      return false if self.isFsFile(filePath) and getFile and pushFile(oFileInfo) == false
+    )
   readDir path, countLayer
-  return
+  return null
 
 ###*
 # create dir recursively, will create folder if path not exists
@@ -134,15 +106,15 @@ self.createDir = (path, cb) ->
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
-  createDir = (dirPath)->
+  createDir = (dirPath) ->
     subPath = ''
     aPath = caro.splitStr(dirPath, [
       '\\' # for windows
       '/' # for linux
     ])
-    caro.each aPath, (i, eachDir)->
-      subPath = caro.normalizePath(subPath, eachDir)
-      exists = caro.fsExists(subPath)
+    caro.forEach(aPath, (eachDir)->
+      subPath = self.normalizePath(subPath, eachDir)
+      exists = self.fsExists(subPath)
       return if exists
       try
         nFs.mkdirSync subPath
@@ -150,11 +122,12 @@ self.createDir = (path, cb) ->
         showErr(e)
         pass = false
         err.push e
-      return
-    err
-  caro.each aPath, (i, dirPath) ->
+    )
+    return err
+  caro.forEach(aPath, (dirPath) ->
     err = [] # reset err in each path
     err = createDir(dirPath)
     err = coverToFalseIfEmptyArr(err)
     caro.executeIfFn(cb, err, dirPath)
-  pass
+  )
+  return pass

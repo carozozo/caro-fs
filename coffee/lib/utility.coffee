@@ -33,7 +33,7 @@ self.fsExists = (path, cb) ->
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
-  caro.each aPath, (i, path) ->
+  caro.forEach(aPath, (path) ->
     err = false
     try
       pass = false if !nFs.existsSync(path)
@@ -42,8 +42,8 @@ self.fsExists = (path, cb) ->
       pass = false
       err = e
     caro.executeIfFn(cb, err, path)
-    return
-  pass
+  )
+  return pass
 
 ###*
 # check if folder, return false when anyone is false
@@ -56,18 +56,18 @@ self.isFsDir = (path, cb) ->
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
-  caro.each aPath, (i, path) ->
+  caro.forEach(aPath, (path) ->
     err = false
     try
-      stat = caro.getFsStat(path)
+      stat = self.getFsStat(path)
       pass and pass = stat.isDirectory()
     catch e
       showErr(e)
       pass = false
       err = e
     caro.executeIfFn(cb, err, path)
-    return
-  pass
+  )
+  return pass
 
 ###*
 # check if file, return false when anyone is false
@@ -80,18 +80,18 @@ self.isFsFile = (path) ->
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
-  caro.each aPath, (i, path) ->
+  caro.forEach(aPath, (path) ->
     err = false
     try
-      stat = caro.getFsStat(path)
+      stat = self.getFsStat(path)
       pass and pass = stat.isFile()
     catch e
       showErr(e)
       pass = false
       err = e
     caro.executeIfFn(cb, err, path)
-    return
-  pass
+  )
+  return pass
 
 ###*
 # check if symbolic link, return false when anyone is false
@@ -104,18 +104,18 @@ self.isFsSymlink = (path) ->
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
-  caro.each aPath, (i, path) ->
+  caro.forEach(aPath, (path) ->
     err = false
     try
-      stat = caro.getFsStat(path)
+      stat = self.getFsStat(path)
       pass and pass = stat.isSymbolicLink()
     catch e
       showErr(e)
       pass = false
       err = e
     caro.executeIfFn(cb, err, path)
-    return
-  pass
+  )
+  return pass
 
 ###*
 # @param {string} path
@@ -123,11 +123,11 @@ self.isFsSymlink = (path) ->
 ###
 self.getFileType = (path) ->
   r = ''
-  if caro.isFsDir(path)
+  if self.isFsDir(path)
     r = 'dir'
-  if caro.isFsFile(path)
+  if self.isFsFile(path)
     r = 'file'
-  if caro.isFsSymlink(path)
+  if self.isFsSymlink(path)
     r = 'link'
   r
 
@@ -152,32 +152,31 @@ self.deleteFs = (path, cb, force) ->
       showErr(e)
       pass = false
       err.push e
-    return
   deleteFileOrDir = (path) ->
-    if caro.isFsFile(path) and force
+    if self.isFsFile(path) and force
       tryAndCatchErr(->
         nFs.unlinkSync(path)
       )
       return
-    if caro.isFsDir(path)
+    if self.isFsDir(path)
       tryAndCatchErr(->
         files = nFs.readdirSync(path)
-        caro.each files, (i, file) ->
+        caro.forEach(files, (file) ->
           subPath = caro.normalizePath(path, file)
           deleteFileOrDir(subPath)
-          return
-        return
+        )
       )
     tryAndCatchErr(->
       nFs.rmdirSync(path)
     )
-    err
-  caro.each aPath, (i, dirPath) ->
+    return err
+  caro.forEach(aPath, (dirPath) ->
     err = [] # reset err in each path
     err = deleteFileOrDir(dirPath)
     err = coverToFalseIfEmptyArr(err)
     caro.executeIfFn(cb, err, dirPath)
-  pass
+  )
+  return pass
 
 ###*
 # @param {string|...[]} path the file-path, you can also set as [path,newPath]
@@ -200,22 +199,22 @@ self.renameFs = (path, newPath, cb, force = false) ->
       ]
     args.arr
   # e.g. aPath=[[path, path2],[path3, path4]]
-  caro.each aPathMap, (i, pathMap) ->
+  caro.forEach(aPathMap, (pathMap) ->
     err = false
     path1 = pathMap[0]
     path2 = pathMap[1]
     try
-      if force and caro.fsExists(path1)
-        dirPath2 = caro.getDirPath(path2)
-        caro.createDir dirPath2
+      if force and self.fsExists(path1)
+        dirPath2 = self.getDirPath(path2)
+        self.createDir dirPath2
       nFs.renameSync path1, path2
     catch e
       showErr(e)
       pass = false
       err = e
     caro.executeIfFn(cb, err, path1, path2)
-    return
-  pass
+  )
+  return pass
 
 ###*
 # get file stat
@@ -242,7 +241,7 @@ self.getFsStat = (path, type = 'l') ->
         break
   catch e
     showErr(e)
-  stat
+  return stat
 
 ###*
 # get file size, default in bytes or set by unit
@@ -254,15 +253,14 @@ self.getFsStat = (path, type = 'l') ->
 self.getFsSize = (path, fixed = 1, unit) ->
   bytes = getFileSize(path)
   return bytes if bytes == null
-  args = caro.objToArr(arguments)
-  args.shift()
+  args = args.drop(arguments)
   args = getArgs(args)
-  fixed = caro.coverToInt(args.num[0])
+  fixed = caro.toInteger(args.num[0])
   fixed = if fixed > -1 then fixed else 1
   unit = args.str[0]
   si = true
-  unit = caro.upperFirst(unit) # e.g. 'mib' -> 'Mib'
-  unit = caro.upperStr(unit, {start: -1}) # e.g. 'Mib' -> 'MiB'
+  unit = caro.capitalize(unit) # e.g. 'mib' -> 'Mib'
+  unit = caro.upperStr(unit, -1) # e.g. 'Mib' -> 'MiB'
   index1 = fileSizeUnits1.indexOf(unit)
   index2 = fileSizeUnits2.indexOf(unit)
   si = false if index2 > -1
@@ -273,7 +271,7 @@ self.getFsSize = (path, fixed = 1, unit) ->
   while count < index
     bytes /= thresh
     ++count
-  caro.coverToNum(bytes.toFixed(fixed))
+  caro.toNumber(caro.toFixedNumber(bytes, fixed))
 
 ###*
 # get file size for human-reading
