@@ -11,7 +11,8 @@ var cf = require('caro-fs');
 cf.fsExists(['caro-fs.js']); // true
 ```
 
-**[Dir](#Dir)** | **[File](#file)** | **[Path](#path)** | **★[Utility](#utility)** 
+## Index
+**[Dir](#dir)** | **[File](#file)** | **[Path](#path)** | **★[Utility](#utility)** 
 
 ### Dir
 [Back to Index](#index)
@@ -51,6 +52,19 @@ var r = caro.createDir('./src/lib/coffee'); // boolean (will try to create /src/
 var r2 = caro.createDir('./\/test','test2/sub_test', function (err, path){
     // catch error and path
 }); // boolean
+```
+
+### File
+- **readFile(path [encoding='utf8'] [flag=null]) - 讀取檔案內容**
+```javascript
+// https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
+var r = caro.readFileCaro('./test.html');
+```
+- **writeFile(path, data [encoding='utf8'] [flag=null]) - 寫入檔案內容，失敗則回傳 false**
+```javascript
+// https://nodejs.org/api/fs.html#fs_fs_writefilesync_filename_data_options
+var data = caro.readFileCaro('./test.html');
+var r = caro.writeFileCaro('./test.html', data);
 ```
 
 ### Path
@@ -105,17 +119,6 @@ var r2 = caro.createDir('./\/test','test2/sub_test', function (err, path){
 - **setFsTrace(bool) - 設定檔案操作發生錯誤時，是否顯示 console.error (default=false)**
 ```javascript
 caro.setFsTrace(true);
-```
-- **readFileCaro(path [encoding='utf8'] [flag=null]) - 讀取檔案內容**
-```javascript
-// https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
-var r = caro.readFileCaro('./test.html');
-```
-- **writeFileCaro(path, data [encoding='utf8'] [flag=null]) - 寫入檔案內容，失敗則回傳 false**
-```javascript
-// https://nodejs.org/api/fs.html#fs_fs_writefilesync_filename_data_options
-var data = caro.readFileCaro('./test.html');
-var r = caro.writeFileCaro('./test.html', data);
 ```
 - **fsExists(path... [cb]) - 判斷檔案/資料夾是否存在，其中一個不存在則回傳 false**
 ```javascript

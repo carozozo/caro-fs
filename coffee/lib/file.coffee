@@ -9,7 +9,7 @@
 # @param {?string} [flag=null]
 # @returns {*}
 ###
-self.readFileCaro = (path, encoding = 'utf8', flag = null) ->
+self.readFile = (path, encoding = 'utf8', flag = null) ->
   try
     return nFs.readFileSync(path,
       encoding: encoding
@@ -26,7 +26,7 @@ self.readFileCaro = (path, encoding = 'utf8', flag = null) ->
 # @param {?string} [flag=null]
 # @returns {*}
 ###
-self.writeFileCaro = (path, data, encoding = 'utf8', flag = null) ->
+self.writeFile = (path, data, encoding = 'utf8', flag = null) ->
   try
     nFs.writeFileSync path, data,
       encoding: encoding

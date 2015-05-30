@@ -5,11 +5,11 @@
 #    r = cf.setFsTrace(false);
 #    r.should.be.a('boolean')
 #
-#  it 'readFileCaro', ->
-#    r = cf.readFileCaro(__dirname + '/path_test.coffee');
+#  it 'readFile', ->
+#    r = cf.readFile(__dirname + '/path_test.coffee');
 #    r.should.be.a('string')
 #
-#  it 'writeFileCaro', ->
-#    data = cf.readFileCaro(__dirname + '/test.html');
-#    r = cf.writeFileCaro(__dirname + '/\/test2.html', data);
+#  it 'writeFile', ->
+#    data = cf.readFile(__dirname + '/test.html');
+#    r = cf.writeFile(__dirname + '/\/test2.html', data);
 #    r.should.be.a('boolean')
