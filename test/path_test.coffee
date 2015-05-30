@@ -1,6 +1,6 @@
 do ->
 describe 'Path', ->
-  it 'setAbsolutePath', ->
+  it.only 'setAbsolutePath', ->
     r = cf.setAbsolutePath('/path/from/root');
     r2 = cf.setAbsolutePath('/path2///from\\\\root');
     r3 = cf.setAbsolutePath({});

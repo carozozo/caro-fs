@@ -1,12 +1,10 @@
 module.exports = function (grunt) {
     'use strict';
     var pkgName = '<%= pkg.name %>';
-    var pkgFile = pkgName + '.js';
     var coffeeDir = 'coffee/';
     var jsDir = 'js/';
     var testDir = 'test/';
     var nodeDir = 'node_modules/';
-    var banner = '/*! ' + pkgName + ' - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */\r\n';
 
     // Project configuration.
     grunt.initConfig({
@@ -42,11 +40,11 @@ module.exports = function (grunt) {
                     require: [
                         nodeDir + 'coffee-script/register',
                         function () {
-                            var cf = require('./caro-fs.js');
+                            global.cf = require('./caro-fs.js');
                         },
                         function () {
                             var chai = require('chai');
-                            should = chai.should();
+                            global.should = chai.should();
                         }
                     ]
                 },

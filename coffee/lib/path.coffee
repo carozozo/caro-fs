@@ -10,7 +10,7 @@ absolutePath = if typeof __dirname != 'undefined' then __dirname else ''
 ###
 self.setAbsolutePath = (path) ->
   return false if !caro.isString(path)
-  absolutePath = caro.normalizePath path
+  absolutePath = self.normalizePath path
 
 ###*
 # get absolute root path
@@ -24,8 +24,7 @@ self.getAbsolutePath = ->
   # @returns {string|*}
   ###
 self.normalizePath = (path) ->
-  args = caro.objToArr(arguments)
-  nPath.join.apply nPath, args
+  nPath.join.apply nPath, arguments
 
 ###*
 # check if path contain absolute root path

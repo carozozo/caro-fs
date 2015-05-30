@@ -17,7 +17,7 @@ self.setAbsolutePath = function(path) {
   if (!caro.isString(path)) {
     return false;
   }
-  return absolutePath = caro.normalizePath(path);
+  return absolutePath = self.normalizePath(path);
 };
 
 
@@ -37,9 +37,7 @@ self.getAbsolutePath = function() {
  */
 
 self.normalizePath = function(path) {
-  var args;
-  args = caro.objToArr(arguments);
-  return nPath.join.apply(nPath, args);
+  return nPath.join.apply(nPath, arguments);
 };
 
 
