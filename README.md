@@ -13,6 +13,46 @@ cf.fsExists(['caro-fs.js']); // true
 
 **[Dir](#Dir)** | **[File](#file)** | **[Path](#path)** | **★[Utility](#utility)** 
 
+### Dir
+[Back to Index](#index)
+- **isEmptyDir(path... [cb]) - check if empty folder**
+```javascript
+var r = caro.isEmptyDir('/1'); // boolean
+var r2 = caro.isEmptyDir('/1', '/2', function (err, path){
+    // catch error and path
+}); // boolean
+```
+- **readDirCb(path, cb [opt]) - get file-info under dir**
+```javascript
+caro.readDirCb('../src', function(err, oFileInfo) {
+    // you can stop call-back by return false
+    console.log(oFileInfo); 
+    console.log(oFileInfo.filename);
+    // filename
+    // extendName
+    // basename
+    // filePath
+    // dirPath
+    // fullPAth
+    // fullDirPath
+    // fileType
+    // layer
+    // index
+ }, {
+    maxLayer: 1, // the layer you want to get, will get all if 0
+    getDir: true, // if get dir
+    getFile: true, // if get file
+    getByExtend: false // e.g. 'js,html' => only get .js and .html files
+}); - this is default options
+```
+- **createDir(path... [cb]) - create folder**
+```javascript
+var r = caro.createDir('./src/lib/coffee'); // boolean (will try to create /src/lib, /src/lib/coffee)
+var r2 = caro.createDir('./\/test','test2/sub_test', function (err, path){
+    // catch error and path
+}); // boolean
+```
+
 ### Path
 [Back to Index](#index)
 - **setAbsolutePath(path) - set root absolute path**
@@ -25,34 +65,34 @@ cf.fsExists(['caro-fs.js']); // true
     caro.setAbsolutePath('/path/from/root');
     var r = caro.getAbsolutePath(); // '/path/from/root'
 ```
-- **normalizePath(path...) - 正規化路徑**
+- **normalizePath(path...) - normalize path**
 ```javascript
     var r = caro.normalizePath('path//seems/not/exists'); // 'path/seems/not/exists'
     var r2 = caro.normalizePath('path', '\exists'); // 'path/exists'
 ```
-- **isFullPath(path...) - 確認是否為絕對路徑**
+- **isFullPath(path...) - check if absolute path**
 ```javascript
     caro.setAbsolutePath('/path/root');
     var r = caro.isFullPath('/path/root/caro.js'); // true
     var r2 = caro.isFullPath('/path/root/caro.js', '/path2'); // false
 ```
-- **getDirPath(path) - 取得所在的資料夾路徑**
+- **getDirPath(path) - get dir-path of file**
 ```javascript
     var r = caro.getDirPath('/path/from/root'); // '/path/from'
     var r2 = caro.getDirPath('/path/from/root/caro.js'); // '/path/from/root'
 ```
-- **getFileName(path [getFull=true]) - 取得檔案名稱**
+- **getFileName(path [getFull=true]) - get file name**
 ```javascript
     var r = caro.getFileName('/path/from/root'); // 'root'
     var r2 = caro.getFileName('/path/from/root/caro.js'); // 'caro.js'
     var r3 = caro.getFileName('/path/from/root/caro.js', false); // 'caro'
 ```
-- **getExtendName(path [withDot=true]) - 取得附檔名**
+- **getExtendName(path [withDot=true]) - get extend-name of file**
 ```javascript
     var r = caro.getExtendName('caro.js'); // '.js'
     var r2 = caro.getExtendName('caro.js.bk', false); // 'bk'
 ```
-- **coverToFullPath(path) - 轉為絕對路徑**
+- **coverToFullPath(path) - cover to absolute path**
 ```javascript
     caro.setAbsolutePath('/path/from/root');
     var r = caro.coverToFullPath('caro.js');  // '/path/from/root/caro.js'
@@ -76,44 +116,6 @@ var r = caro.readFileCaro('./test.html');
 // https://nodejs.org/api/fs.html#fs_fs_writefilesync_filename_data_options
 var data = caro.readFileCaro('./test.html');
 var r = caro.writeFileCaro('./test.html', data);
-```
-- **isEmptyDir(path... [cb]) - 判斷是否為空資料夾，其中一個不是資料夾或不是空的則回傳 false**
-```javascript
-var r = caro.isEmptyDir('/1'); // boolean
-var r2 = caro.isEmptyDir('/1', '/2', function (err, path){
-    // catch error and path
-}); // boolean
-```
-- **readDirCb(path, cb [opt]) - 取得資料夾內容**
-```javascript
-caro.readDirCb('../src', function(err, oFileInfo) {
-    // you can stop call-back by return false
-    console.log(oFileInfo); // 檔案訊息(Object) 
-    console.log(oFileInfo.filename);
-    // filename 檔名
-    // extendName 副檔名
-    // basename 全檔名
-    // filePath 檔案相對路徑
-    // dirPath 資料夾相對路徑
-    // fullPAth 檔案絕對路徑
-    // fullDirPath 資料夾絕對路徑
-    // fileType 檔案類型
-    // layer 檔案在資料夾底下的第 layer 層
-    // index 檔案在所屬的資料夾的第 index 個
- }, {
-    maxLayer: 1, // 要讀取該資料夾底下的層級，設 0 則讀取全部
-    getDir: true, // 是否讀取資料夾
-    getFile: true, // 是否讀取檔案
-    getByExtend: false // 指定要讀取的檔案類型， e.g. 'js,html' => 只讀取 .js/.html 檔
-});
-```
-- **createDir(path... [cb]) - 新增資料夾，失敗則回傳 false**
-```javascript
-// 假設 src 底下沒有 lib 資料夾
-var r = caro.createDir('./src/lib/coffee'); // boolean (will try to create /src/lib, /src/lib/coffee)
-var r2 = caro.createDir('./\/test','test2/sub_test', function (err, path){
-    // catch error and path
-}); // boolean
 ```
 - **fsExists(path... [cb]) - 判斷檔案/資料夾是否存在，其中一個不存在則回傳 false**
 ```javascript
