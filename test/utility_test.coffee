@@ -1,5 +1,8 @@
 #do ->
 #describe 'Utility', ->
+#  it 'setFsTrace', ->
+#    r = cf.setFsTrace(false);
+#    r.should.be.a('boolean')
 #  it 'fsExists', ->
 #    r = cf.fsExists('./a/b', 'c', (e, path) ->
 #    );

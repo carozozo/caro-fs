@@ -2,9 +2,10 @@
 # File
 ###
 getFileSize = (path) ->
-  status = caro.getFsStat(path)
-  return status.size if status
   return path if caro.isNumber(path)
+  status = self.getFsStat(path)
+  return status.size if status
+  return null
 
 ###*
 # read file content, return false if failed
@@ -17,7 +18,8 @@ self.readFile = (path, encoding = 'utf8', flag = null) ->
   try
     return nFs.readFileSync(path,
       encoding: encoding
-      flag: flag)
+      flag: flag
+    )
   catch e
     showErr(e)
   false
@@ -50,7 +52,7 @@ self.writeFile = (path, data, encoding = 'utf8', flag = null) ->
 self.getFsSize = (path, fixed = 1, unit) ->
   bytes = getFileSize(path)
   return bytes if bytes == null
-  args = args.drop(arguments)
+  args = caro.drop(arguments)
   args = getArgs(args)
   fixed = caro.toInteger(args.num[0])
   fixed = if fixed > -1 then fixed else 1
@@ -87,4 +89,4 @@ self.humanFeSize = (path, fixed = 1, si = true) ->
   while bytes >= thresh
     bytes /= thresh
     ++u
-  caro.coverToFixed(bytes, fixed) + ' ' + aUnit[u]
+  caro.toFixedNumber(bytes, fixed) + ' ' + aUnit[u]

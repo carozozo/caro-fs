@@ -1,5 +1,5 @@
 do ->
-describe.only 'Dir', ->
+describe 'Dir', ->
   it 'isEmptyDir', ->
     r = cf.isEmptyDir('/1','/2',
       (e, path) ->

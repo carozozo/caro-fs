@@ -55,29 +55,29 @@ var r2 = caro.createDir('./\/test','test2/sub_test', function (err, path){
 ```
 
 ### File
-- **readFile(path [encoding='utf8'] [flag=null]) - 讀取檔案內容**
+- **readFile(path [encoding='utf8'] [flag=null]) - read file content**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
 var r = caro.readFileCaro('./test.html');
 ```
-- **writeFile(path, data [encoding='utf8'] [flag=null]) - 寫入檔案內容，失敗則回傳 false**
+- **writeFile(path, data [encoding='utf8'] [flag=null]) - write file with data**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_writefilesync_filename_data_options
 var data = caro.readFileCaro('./test.html');
 var r = caro.writeFileCaro('./test.html', data);
 ```
 ```
-- **getFsSize(path [fixed=1] [unit]) - 取得檔案大小(bytes)，或指定以「特定單位」回傳(KB/MB.../KiB/Mib....)**
+- **getFsSize(path [fixed=1] [unit]) - get file size(bytes), or specific unit (KB/MB.../KiB/Mib....)**
 ```javascript
 var r = caro.getFsSize('./caro.js'); // e.g. 439078
-var r2 = caro.getFsSize('./caro.js', 'mb'); // e.g. 439 
+var r2 = caro.getFsSize('./fileNotExists.js'); // null 
 var r3 = caro.getFsSize(123000, 5, 'gib'); // 0.1173
 ```
-- **humanFeSize(bytes [fixed=1] [si=false]) - 將檔案大小轉為易讀格式**
+- **humanFeSize(path [fixed=1] [si=true]) - get and cover file size for easy-reading**
 ```javascript
 // http://en.wikipedia.org/wiki/File_size
-var r = caro.humanFeSize('./caro.js'); // e.g. '439.1 KB'
-var r2 = caro.humanFeSize('./caro.js', 3); // e.g. '439.078 KB'
+var r = cf.humanFeSize('./caro-fs.js', 3); // e.g. '439.1 KB'
+var r2 = caro.humanFeSize('./fileNotExists.js', 3); // null
 var r3 = caro.humanFeSize(10000000, 2, false); // '9.54 MiB'
 ```
 ### Path
