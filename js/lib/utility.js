@@ -87,20 +87,20 @@ self.isDir = function(path, cb) {
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
     var e, err, pass, stat;
-    pass = false;
+    pass = true;
     err = false;
     try {
       stat = self.getStat(path);
-      if (!stat.isDirectory()) {
-        allPass = false;
-        pass = false;
-      }
     } catch (_error) {
       e = _error;
       showErr(e);
       allPass = false;
       pass = false;
       err = e;
+    }
+    if (!stat || !stat.isDirectory()) {
+      allPass = false;
+      pass = false;
     }
     return caro.executeIfFn(cb, err, path, pass);
   });
@@ -123,20 +123,20 @@ self.isFile = function(path) {
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
     var e, err, pass, stat;
-    pass = false;
+    pass = true;
     err = false;
     try {
       stat = self.getStat(path);
-      if (!stat.isFile()) {
-        allPass = false;
-        pass = false;
-      }
     } catch (_error) {
       e = _error;
       showErr(e);
       allPass = false;
       pass = false;
       err = e;
+    }
+    if (!stat || !stat.isFile()) {
+      allPass = false;
+      pass = false;
     }
     return caro.executeIfFn(cb, err, path, pass);
   });
@@ -159,20 +159,20 @@ self.isSymlink = function(path) {
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
     var e, err, pass, stat;
-    pass = false;
+    pass = true;
     err = false;
     try {
       stat = self.getStat(path);
-      if (!stat.isSymbolicLink()) {
-        allPass = false;
-        pass = false;
-      }
     } catch (_error) {
       e = _error;
       showErr(e);
       allPass = false;
       pass = false;
       err = e;
+    }
+    if (!stat || !stat.isSymbolicLink()) {
+      allPass = false;
+      pass = false;
     }
     return caro.executeIfFn(cb, err, path, pass);
   });
@@ -233,14 +233,14 @@ self.deleteFs = function(path, cb, force) {
       });
       return;
     }
-    if (self.isDir(path)) {
+    if (self.isDir(path) && force) {
       tryAndCatchErr(function() {
         var files;
         files = nFs.readdirSync(path);
         return caro.forEach(files, function(file) {
           var subPath;
           subPath = self.normalizePath(path, file);
-          return force && deleteFileOrDir(subPath);
+          return deleteFileOrDir(subPath);
         });
       });
     }
@@ -269,17 +269,14 @@ self.deleteFs = function(path, cb, force) {
 
 self.renameFs = function(path, newPath, cb, force) {
   var aPathMap, args, pass;
-  if (force == null) {
-    force = false;
-  }
   pass = true;
   aPathMap = [];
   args = getArgs(arguments);
   cb = args.fn[0];
-  force = args.bool[0];
+  force = args.bool[0] || false;
   aPathMap = (function() {
     if (caro.isString(path) && caro.isString(newPath)) {
-      return [path, newPath];
+      return [[path, newPath]];
     }
     return args.arr;
   })();

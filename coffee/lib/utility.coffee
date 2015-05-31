@@ -67,18 +67,18 @@ self.isDir = (path, cb) ->
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
-    pass = false
+    pass = true
     err = false
     try
       stat = self.getStat(path)
-      if !stat.isDirectory()
-        allPass = false
-        pass = false
     catch e
       showErr(e)
       allPass = false
       pass = false
       err = e
+    if !stat or !stat.isDirectory()
+      allPass = false
+      pass = false
     caro.executeIfFn(cb, err, path, pass)
   )
   return allPass
@@ -95,18 +95,18 @@ self.isFile = (path) ->
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
-    pass = false
+    pass = true
     err = false
     try
       stat = self.getStat(path)
-      if !stat.isFile()
-        allPass = false
-        pass = false
     catch e
       showErr(e)
       allPass = false
       pass = false
       err = e
+    if !stat or !stat.isFile()
+      allPass = false
+      pass = false
     caro.executeIfFn(cb, err, path, pass)
   )
   return allPass
@@ -123,18 +123,18 @@ self.isSymlink = (path) ->
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
-    pass = false
+    pass = true
     err = false
     try
       stat = self.getStat(path)
-      if !stat.isSymbolicLink()
-        allPass = false
-        pass = false
     catch e
       showErr(e)
       allPass = false
       pass = false
       err = e
+    if !stat or !stat.isSymbolicLink()
+      allPass = false
+      pass = false
     caro.executeIfFn(cb, err, path, pass)
   )
   return allPass
@@ -180,12 +180,12 @@ self.deleteFs = (path, cb, force) ->
         nFs.unlinkSync(path)
       )
       return
-    if self.isDir(path)
+    if self.isDir(path) and force
       tryAndCatchErr(->
         files = nFs.readdirSync(path)
         caro.forEach(files, (file) ->
           subPath = self.normalizePath(path, file)
-          force and deleteFileOrDir(subPath)
+          deleteFileOrDir(subPath)
         )
       )
     tryAndCatchErr(->
@@ -207,18 +207,18 @@ self.deleteFs = (path, cb, force) ->
 # @param {boolean} [force=false] will create folder if there is no path for newPath
 # @returns {boolean}
 ###
-self.renameFs = (path, newPath, cb, force = false) ->
+self.renameFs = (path, newPath, cb, force) ->
   pass = true
   aPathMap = []
   args = getArgs(arguments)
   cb = args.fn[0]
-  force = args.bool[0]
+  force = args.bool[0] or false
   aPathMap = do ->
     if caro.isString(path) and caro.isString(newPath)
-      return [
-        path
-        newPath
-      ]
+      return [[
+                path
+                newPath
+              ]]
     args.arr
   # e.g. aPath=[[path, path2],[path3, path4]]
   caro.forEach(aPathMap, (pathMap) ->

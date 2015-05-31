@@ -182,9 +182,9 @@ var r2 = cf.deleteFs('./test','./1.js','./2.lnk', function(err, path){
     // catch error and path
 }, true);  // boolean (force-delete if possible for folder)
 ```
-- **renameFs(path, newPath [cb] [force=false]) - 檔案移動更名，失敗則回傳 false**
+- **renameFs(path, newPath [cb] [force=false]) - rename file/directory**
 ```javascript
-r = cf.renameFs('./a', './b/c', true); // bool
+r = cf.renameFs('./a', './b/c', true); // boolean
 r2 = cf.renameFs(['1.js', 'a/2.js'], ['3.js', '4.js'], function(err, path1, path2){
     // catch error and path
 }, true); // boolean (force-create folder for path2 if possible)
