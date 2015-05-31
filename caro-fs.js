@@ -984,8 +984,3 @@ self.renameFs = function(path, newPath, cb, force) {
   });
   return pass;
 };
-
-self.copyFs = function(path, destPath, cb, force) {
-  var data;
-  return data = self.readFile(path, {});
-};

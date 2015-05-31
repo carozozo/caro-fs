@@ -1,15 +1,17 @@
 do ->
 describe 'File', ->
   it 'readFile', ->
-    r = cf.readFile(__dirname + '/file_test2.coffee', (e, data)->
+    r = cf.readFile(__dirname + '/file_test2.coffee', (e, data) ->
       e.should.be.a('object')
       should.equal(data, null)
     );
     should.equal(r, null)
-    r2 = cf.readFile(__dirname + '/file_test.coffee', (e, data)->
+    r2 = cf.readFile(__dirname + '/file_test.coffee', (e, data) ->
       e.should.be.false
       data.should.be.a('string')
-    );
+    , {
+        encoding: 'utf8'
+      });
     r2.should.be.a('string')
 
   it 'writeFile', ->
