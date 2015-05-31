@@ -12,7 +12,7 @@ cf.fsExists(['caro-fs.js']); // true
 ```
 
 ## Index
-**[Dir](#dir)** | **[File](#file)** | **[Path](#path)** | **[Utility](#utility)** 
+**[Dir](#dir)** | **[File](#file)** | **[Path](#path)** | **[TypeCheck](#typecheck)** | **[Utility](#utility)** 
 
 ### Dir
 [Back to Index](#index)
@@ -55,6 +55,7 @@ var r2 = cf.createDir('./\/test','test2/sub_test', function (err, path){
 ```
 
 ### File
+[Back to Index](#index)
 - **readFile(path [cb] [opt]) - read file content**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
@@ -139,26 +140,8 @@ var r3 = cf.humanFeSize(10000000, 2, false); // '9.54 MiB'
     var r3 = cf.coverToFullPath('/path/from/root/caro-fs.js'); // '/path/from/root/caro-fs.js'
 ```
 
-### Utility
+### TypeCheck
 [Back to Index](#index)
-- **setFsTrace(bool) - if console.error when got exception (default=false)**
-```javascript
-cf.setFsTrace(true);
-```
-- **getStat(path [type='l']) - get file stat**
-```javascript
-// https://nodejs.org/api/fs.html#fs_class_fs_stats
-// 'l' => lstatSync, 'f' => fstatSync, 's' => statSync
-var r = cf.getStat('./caro-fs.js','l');
-```
-- **exists(path... [cb]) - check file if exist**
-```javascript
-var r = cf.exists('./caro-fs.js'); // boolean
-var r2 = cf.exists('./a', './caro-fs.js'); // return false is one of them not exists
-var r3 = cf.exists('a', 'b', function(err, path, result){
-    // catch error, path, if-exists
-}); // boolean
-```
 - **isDir(path... [cb]) - check if directory**
 ```javascript
 var r = cf.isDir('./a'); // boolean
@@ -186,6 +169,27 @@ var r3 = cf.isSymlink('a', 'b', function(err, path, result){
 - **getFileType(path) - get file type**
 ```javascript
 var r = cf.getFileType('./caro-fs.js'); // dir/file/link，or ''
+```
+
+### Utility
+[Back to Index](#index)
+- **setFsTrace(bool) - if console.error when got exception (default=false)**
+```javascript
+cf.setFsTrace(true);
+```
+- **getStat(path [type='l']) - get file stat**
+```javascript
+// https://nodejs.org/api/fs.html#fs_class_fs_stats
+// 'l' => lstatSync, 'f' => fstatSync, 's' => statSync
+var r = cf.getStat('./caro-fs.js','l');
+```
+- **exists(path... [cb]) - check file if exist**
+```javascript
+var r = cf.exists('./caro-fs.js'); // boolean
+var r2 = cf.exists('./a', './caro-fs.js'); // return false is one of them not exists
+var r3 = cf.exists('a', 'b', function(err, path, result){
+    // catch error, path, if-exists
+}); // boolean
 ```
 - **deleteFs(path... [force=false]) - delete file/directory **
 ```javascript
