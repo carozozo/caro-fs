@@ -282,7 +282,7 @@ self.createDir = function(path, cb) {
  * @param {string} path
  * @param {function} [cb] the callback function that passing error and data
  * @param {object} [opt]
- * @param {string} [opt.encoding=utf8]
+ * @param {string} [opt.encoding=null]
  * @param {string} [opt.flag=null]
  * @returns {*}
  */
@@ -314,9 +314,11 @@ self.readFile = function(path, cb, opt) {
  * write data to file, return false if failed
  * @param {string} path
  * @param {*} data
- * @param {string} [encoding=utf8]
- * @param {string} [flag=null]
- * @param {int} [mode=438]
+ * @param {function} [cb] the callback function that passing error
+ * @param {object} [opt]
+ * @param {string} [opt.encoding=null]
+ * @param {string} [opt.flag=null]
+ * @param {int} [mode=null]
  * @returns {*}
  */
 
@@ -336,6 +338,42 @@ self.writeFile = function(path, data, cb, opt) {
       mode: mode
     });
     return true;
+  } catch (_error) {
+    e = _error;
+    showErr(e);
+    err = e;
+  }
+  caro.executeIfFn(cb, err);
+  return !err;
+};
+
+
+/**
+ * copy file, return false if failed
+ * @param {string} path
+ * @param {string} newPath
+ * @param {function} [cb] the callback function that passing error
+ * @param {object} [opt]
+ * @param {string} [opt.encoding=null]
+ * @param {string} [opt.flag=null]
+ * @returns {*}
+ */
+
+self.copyFile = function(path, newPath, cb, opt) {
+  var args, data, e, err;
+  err = false;
+  args = getArgs(arguments);
+  opt = args.obj[0] || {};
+  cb = args.fn[0] || null;
+  try {
+    data = self.readFile(path, function(e) {
+      if (e) {
+        return err = e;
+      }
+    }, opt);
+    if (!err) {
+      self.writeFile(newPath, data, opt);
+    }
   } catch (_error) {
     e = _error;
     showErr(e);

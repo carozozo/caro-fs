@@ -7,7 +7,7 @@
 # @param {string} path
 # @param {function} [cb] the callback function that passing error and data
 # @param {object} [opt]
-# @param {string} [opt.encoding=utf8]
+# @param {string} [opt.encoding=null]
 # @param {string} [opt.flag=null]
 # @returns {*}
 ###
@@ -34,9 +34,11 @@ self.readFile = (path, cb, opt) ->
 # write data to file, return false if failed
 # @param {string} path
 # @param {*} data
-# @param {string} [encoding=utf8]
-# @param {string} [flag=null]
-# @param {int} [mode=438]
+# @param {function} [cb] the callback function that passing error
+# @param {object} [opt]
+# @param {string} [opt.encoding=null]
+# @param {string} [opt.flag=null]
+# @param {int} [mode=null]
 # @returns {*}
 ###
 self.writeFile = (path, data, cb, opt) ->
@@ -58,6 +60,33 @@ self.writeFile = (path, data, cb, opt) ->
     err = e
   caro.executeIfFn(cb, err)
   !err
+
+###*
+# copy file, return false if failed
+# @param {string} path
+# @param {string} newPath
+# @param {function} [cb] the callback function that passing error
+# @param {object} [opt]
+# @param {string} [opt.encoding=null]
+# @param {string} [opt.flag=null]
+# @returns {*}
+###
+self.copyFile = (path, newPath, cb, opt) ->
+  err = false
+  args = getArgs(arguments);
+  opt = args.obj[0] or {}
+  cb = args.fn[0] or null
+  try
+    data = self.readFile(path, (e) ->
+      err = e if e
+    , opt)
+    self.writeFile(newPath, data, opt) if(!err)
+  catch e
+    showErr(e)
+    err = e
+  caro.executeIfFn(cb, err)
+  !err
+
 
 ###*
 # get file size, default in bytes or set by unit

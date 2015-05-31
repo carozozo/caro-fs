@@ -59,25 +59,36 @@ var r2 = cf.createDir('./\/test','test2/sub_test', function (err, path){
 - **readFile(path [cb] [opt]) - read file content**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
-var r = cf.readFileCaro('./caro-fs.js'); // string of data or false
-var r2 = cf.readFileCaro('./caro-fs.js', function(e, data) {
+var r = cf.readFile('./caro-fs.js'); // string of data or false
+var r2 = cf.readFile('./caro-fs.js', function(e, data) {
     // catch error and data
 },{
-    encoding: 'utf8',
+    encoding: null,
     flag: null
 }); // - here is default options
 ```
 - **writeFile(path, data [cb] [opt]) - write file with data**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_writefilesync_filename_data_options
-var data = cf.readFileCaro('./test.html');
-var r = cf.writeFileCaro('./test.html', data); // boolean
-var r2 = cf.readFileCaro('./test.html', function(e) {
+var data = cf.writeFile('./test.html');
+var r = cf.writeFile('./test.html', data); // boolean
+var r2 = cf.writeFile('./test.html', function(e) {
     // catch error
 },{
-    encoding: 'utf8',
+    encoding: null,
     flag: null,
     mode: null
+}); // - here is default options
+```
+- **copyFile(path, newPath [cb] [opt]) - copy file**
+```javascript
+var r = cf.copyFile('./test.html', './test2.html');
+var r2 = cf.copyFile('./1.jpg', './2.jpg'); // boolean
+var r3 = cf.copyFile('./1.jpg', './2.jpg', function(e) {
+    // catch error
+},{
+    encoding: null,
+    flag: null
 }); // - here is default options
 ```
 - **getFsSize(path [fixed=1] [unit]) - get file size(bytes), or specific unit (KB/MB.../KiB/Mib....)**
