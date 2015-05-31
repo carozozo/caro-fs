@@ -1,11 +1,6 @@
 ###*
 # File
 ###
-getFileSize = (path) ->
-  return path if caro.isNumber(path)
-  status = self.getFsStat(path)
-  return status.size if status
-  return null
 
 ###*
 # read file content, return false if failed

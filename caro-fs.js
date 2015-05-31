@@ -3,7 +3,7 @@
  * Caro-FS
  * @author Caro.Huang
  */
-var caro, getArgs, nFs, nPath, self, showErr, traceMode;
+var caro, fileSizeUnits1, fileSizeUnits2, getArgs, getFileSize, nFs, nPath, self, showErr, traceMode;
 
 self = {};
 
@@ -14,6 +14,10 @@ nFs = require('fs');
 nPath = require('path');
 
 caro = require('caro');
+
+fileSizeUnits1 = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
 
 getArgs = function(args) {
   var aArr, aBool, aFn, aNum, aStr;
@@ -56,6 +60,18 @@ showErr = function(e) {
   if (traceMode) {
     return console.error(e);
   }
+};
+
+getFileSize = function(path) {
+  var status;
+  if (caro.isNumber(path)) {
+    return path;
+  }
+  status = self.getFsStat(path);
+  if (status) {
+    return status.size;
+  }
+  return null;
 };
 
 
@@ -256,20 +272,6 @@ self.createDir = function(path, cb) {
 /**
  * File
  */
-var getFileSize;
-
-getFileSize = function(path) {
-  var status;
-  if (caro.isNumber(path)) {
-    return path;
-  }
-  status = self.getFsStat(path);
-  if (status) {
-    return status.size;
-  }
-  return null;
-};
-
 
 /**
  * read file content, return false if failed
@@ -278,7 +280,6 @@ getFileSize = function(path) {
  * @param {?string} [flag=null]
  * @returns {*}
  */
-
 self.readFile = function(path, encoding, flag) {
   var e;
   if (encoding == null) {
@@ -541,12 +542,6 @@ self.coverToFullPath = function(path) {
 /**
  * FileSystem
  */
-var fileSizeUnits1, fileSizeUnits2;
-
-fileSizeUnits1 = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-
 
 /**
  * check file if exists, return false when anyone is false
@@ -554,7 +549,6 @@ fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
  * @param {function} [cb] the callback-function for each path
  * @returns {*}
  */
-
 self.fsExists = function(path, cb) {
   var aPath, args, pass;
   pass = true;

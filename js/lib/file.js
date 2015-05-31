@@ -2,20 +2,6 @@
 /**
  * File
  */
-var getFileSize;
-
-getFileSize = function(path) {
-  var status;
-  if (caro.isNumber(path)) {
-    return path;
-  }
-  status = self.getFsStat(path);
-  if (status) {
-    return status.size;
-  }
-  return null;
-};
-
 
 /**
  * read file content, return false if failed
@@ -24,7 +10,6 @@ getFileSize = function(path) {
  * @param {?string} [flag=null]
  * @returns {*}
  */
-
 self.readFile = function(path, encoding, flag) {
   var e;
   if (encoding == null) {

@@ -7,6 +7,26 @@ traceMode = false
 nFs = require('fs')
 nPath = require('path')
 caro = require('caro')
+fileSizeUnits1 = [
+  'KB'
+  'MB'
+  'GB'
+  'TB'
+  'PB'
+  'EB'
+  'ZB'
+  'YB'
+]
+fileSizeUnits2 = [
+  'KiB'
+  'MiB'
+  'GiB'
+  'TiB'
+  'PiB'
+  'EiB'
+  'ZiB'
+  'YiB'
+]
 getArgs = (args) ->
   aStr = []
   aFn = []
@@ -36,6 +56,11 @@ getArgs = (args) ->
   num: aNum
 showErr = (e) ->
   console.error(e) if traceMode
+getFileSize = (path) ->
+  return path if caro.isNumber(path)
+  status = self.getFsStat(path)
+  return status.size if status
+  return null
 
 ###*
 # set trace-mode, will console.error when got exception

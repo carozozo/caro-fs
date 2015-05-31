@@ -2,12 +2,6 @@
 /**
  * FileSystem
  */
-var fileSizeUnits1, fileSizeUnits2;
-
-fileSizeUnits1 = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-
 
 /**
  * check file if exists, return false when anyone is false
@@ -15,7 +9,6 @@ fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
  * @param {function} [cb] the callback-function for each path
  * @returns {*}
  */
-
 self.fsExists = function(path, cb) {
   var aPath, args, pass;
   pass = true;

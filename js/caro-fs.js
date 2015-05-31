@@ -3,7 +3,7 @@
  * Caro-FS
  * @author Caro.Huang
  */
-var caro, getArgs, nFs, nPath, self, showErr, traceMode;
+var caro, fileSizeUnits1, fileSizeUnits2, getArgs, getFileSize, nFs, nPath, self, showErr, traceMode;
 
 self = {};
 
@@ -14,6 +14,10 @@ nFs = require('fs');
 nPath = require('path');
 
 caro = require('caro');
+
+fileSizeUnits1 = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
 
 getArgs = function(args) {
   var aArr, aBool, aFn, aNum, aStr;
@@ -56,6 +60,18 @@ showErr = function(e) {
   if (traceMode) {
     return console.error(e);
   }
+};
+
+getFileSize = function(path) {
+  var status;
+  if (caro.isNumber(path)) {
+    return path;
+  }
+  status = self.getFsStat(path);
+  if (status) {
+    return status.size;
+  }
+  return null;
 };
 
 

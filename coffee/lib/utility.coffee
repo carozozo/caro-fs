@@ -1,27 +1,6 @@
 ###*
 # FileSystem
 ###
-fileSizeUnits1 = [
-  'KB'
-  'MB'
-  'GB'
-  'TB'
-  'PB'
-  'EB'
-  'ZB'
-  'YB'
-]
-fileSizeUnits2 = [
-  'KiB'
-  'MiB'
-  'GiB'
-  'TiB'
-  'PiB'
-  'EiB'
-  'ZiB'
-  'YiB'
-]
-
 ###*
 # check file if exists, return false when anyone is false
 # @param {...string} path
