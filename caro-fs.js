@@ -241,7 +241,7 @@ self.createDir = function(path, cb) {
     var subPath;
     subPath = '';
     aPath = caro.splitStr(dirPath, ['\\', '/']);
-    caro.forEach(aPath, function(eachDir) {
+    return caro.forEach(aPath, function(eachDir) {
       var e, exists;
       subPath = self.normalizePath(subPath, eachDir);
       exists = self.exists(subPath);
@@ -257,11 +257,10 @@ self.createDir = function(path, cb) {
         return err.push(e);
       }
     });
-    return err;
   };
   caro.forEach(aPath, function(dirPath) {
     err = [];
-    err = createDir(dirPath);
+    createDir(dirPath);
     err = coverToFalseIfEmptyArr(err);
     return caro.executeIfFn(cb, err, dirPath);
   });
@@ -784,16 +783,15 @@ self.deleteFs = function(path, cb, force) {
         });
       });
     }
-    tryAndCatchErr(function() {
+    return tryAndCatchErr(function() {
       return nFs.rmdirSync(path);
     });
-    return err;
   };
-  caro.forEach(aPath, function(dirPath) {
+  caro.forEach(aPath, function(eachPath) {
     err = [];
-    deleteFileOrDir(dirPath);
+    deleteFileOrDir(eachPath);
     err = coverToFalseIfEmptyArr(err);
-    return caro.executeIfFn(cb, err, dirPath);
+    return caro.executeIfFn(cb, err, eachPath);
   });
   return pass;
 };

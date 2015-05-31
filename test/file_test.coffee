@@ -5,8 +5,7 @@ describe 'File', ->
     r.should.be.a('string')
 
   it 'writeFile', ->
-    data = cf.readFile(__dirname + '/test.html');
-    r = cf.writeFile(__dirname + '/\/test2.html', data);
+    r = cf.writeFile(__dirname + '/\/file_test2.coffee', '123');
     r.should.be.a('boolean')
 
   it 'getFsSize', ->

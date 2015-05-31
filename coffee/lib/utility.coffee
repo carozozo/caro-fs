@@ -191,12 +191,11 @@ self.deleteFs = (path, cb, force) ->
     tryAndCatchErr(->
       nFs.rmdirSync(path)
     )
-    return err
-  caro.forEach(aPath, (dirPath) ->
+  caro.forEach(aPath, (eachPath) ->
     err = [] # reset err in each path
-    deleteFileOrDir(dirPath)
+    deleteFileOrDir(eachPath)
     err = coverToFalseIfEmptyArr(err)
-    caro.executeIfFn(cb, err, dirPath)
+    caro.executeIfFn(cb, err, eachPath)
   )
   return pass
 

@@ -244,16 +244,15 @@ self.deleteFs = function(path, cb, force) {
         });
       });
     }
-    tryAndCatchErr(function() {
+    return tryAndCatchErr(function() {
       return nFs.rmdirSync(path);
     });
-    return err;
   };
-  caro.forEach(aPath, function(dirPath) {
+  caro.forEach(aPath, function(eachPath) {
     err = [];
-    deleteFileOrDir(dirPath);
+    deleteFileOrDir(eachPath);
     err = coverToFalseIfEmptyArr(err);
-    return caro.executeIfFn(cb, err, dirPath);
+    return caro.executeIfFn(cb, err, eachPath);
   });
   return pass;
 };

@@ -72,12 +72,14 @@ describe 'Utility', ->
   it 'renameFs', ->
     (createTestFile = ()->
       cf.createDir('./1/2')
+      cf.deleteFs('3', true)
     )();
     r = cf.renameFs('./1/2', '3/4', (e, path1, path2) ->
       e.should.be.false
       path1.should.eq('./1/2')
       path2.should.eq('3/4')
     , true);
+    cf.deleteFs('1', '3', true)
     r2 = cf.renameFs(
       ['a', 'b/c'],
       ['2.js', 'd/2.js'],

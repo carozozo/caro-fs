@@ -1,7 +1,7 @@
 do ->
 describe 'Dir', ->
   it 'isEmptyDir', ->
-    r = cf.isEmptyDir('/1','/2',
+    r = cf.isEmptyDir('/1', '/2',
       (e, path) ->
         e.should.be.a('object')
         path = path == '/1' or path == '/2'
@@ -26,8 +26,9 @@ describe 'Dir', ->
   it 'createDir', ->
     r = cf.createDir('1/a', '2',
       (e, path) ->
-        e.should.be.false
+        cf.deleteFs('1', '2', true)
         path = path == '1/a' or path == '2'
+        e.should.be.false
         path.should.be.true
     );
     r.should.be.true

@@ -153,7 +153,7 @@ self.createDir = function(path, cb) {
     var subPath;
     subPath = '';
     aPath = caro.splitStr(dirPath, ['\\', '/']);
-    caro.forEach(aPath, function(eachDir) {
+    return caro.forEach(aPath, function(eachDir) {
       var e, exists;
       subPath = self.normalizePath(subPath, eachDir);
       exists = self.exists(subPath);
@@ -169,11 +169,10 @@ self.createDir = function(path, cb) {
         return err.push(e);
       }
     });
-    return err;
   };
   caro.forEach(aPath, function(dirPath) {
     err = [];
-    err = createDir(dirPath);
+    createDir(dirPath);
     err = coverToFalseIfEmptyArr(err);
     return caro.executeIfFn(cb, err, dirPath);
   });

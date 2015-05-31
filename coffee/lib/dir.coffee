@@ -123,10 +123,9 @@ self.createDir = (path, cb) ->
         pass = false
         err.push e
     )
-    return err
   caro.forEach(aPath, (dirPath) ->
     err = [] # reset err in each path
-    err = createDir(dirPath)
+    createDir(dirPath)
     err = coverToFalseIfEmptyArr(err)
     caro.executeIfFn(cb, err, dirPath)
   )
