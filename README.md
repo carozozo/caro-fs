@@ -9,7 +9,7 @@ $ npm install caro-fs
 
 ```javascript
 var cf = require('caro-fs');
-cf.fsExists(['caro-fs.js']); // true
+cf.exists(['caro-fs.js']); // boolean
 ```
 
 ## Index
@@ -173,14 +173,14 @@ var r3 = cf.isFile('a', 'b', function(err, path, result){
 - **isSymlink(path...) - check if symbolic link**
 ```javascript
 var r = cf.isSymlink('./a','./caro-fs.js'); // boolean
-var r2 = cf.isSymlink('./a','./caro-fs.js'); // return false is one of them not directory
+var r2 = cf.isSymlink('./a','./caro-fs.js'); // return false is one of them not symbolic link
 var r3 = cf.isSymlink('a', 'b', function(err, path, result){
     // catch error, path, if-symbolic
 }); // boolean
 ```
 - **getFileType(path) - get file type**
 ```javascript
-var r = cf.getFileType('./caro-fs.js'); // dir/file/link，or ''
+var r = cf.getFileType('./caro-fs.js'); // dir/file/link, or ''
 ```
 
 ### Utility
