@@ -128,7 +128,6 @@ self.isSymlink = function(path) {
     err = false;
     try {
       stat = self.getFsStat(path);
-      console.log('stat=', stat);
       if (!stat.isSymbolicLink()) {
         allPass = false;
         pass = false;
