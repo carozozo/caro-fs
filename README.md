@@ -203,7 +203,7 @@ var r3 = cf.exists('a', 'b', function(err, path, result){
     // catch error, path, if-exists
 }); // boolean
 ```
-- **deleteFs(path... [force=false]) - delete file/directory **
+- **deleteFs(path... [force=false]) - delete file/directory**
 ```javascript
 var r = cf.deleteFs('./1.js','./2.lnk'); // boolean
 var r2 = cf.deleteFs('./test','./1.js','./2.lnk', function(err, path){
