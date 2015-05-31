@@ -12,7 +12,7 @@ cf.fsExists(['caro-fs.js']); // true
 ```
 
 ## Index
-**[Dir](#dir)** | **[File](#file)** | **[Path](#path)** | **★[Utility](#utility)** 
+**[Dir](#dir)** | **[File](#file)** | **[Path](#path)** | **[Utility](#utility)** 
 
 ### Dir
 [Back to Index](#index)
@@ -58,22 +58,26 @@ var r2 = cf.createDir('./\/test','test2/sub_test', function (err, path){
 - **readFile(path [cb] [opt]) - read file content**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
-var r = cf.readFileCaro('./caro-fs.js',function(e, data) {
-    // catch error and data
-}); // string of data or false
-var r2 = cf.readFileCaro('./caro-fs.js',function(e, data) {
+var r = cf.readFileCaro('./caro-fs.js'); // string of data or false
+var r2 = cf.readFileCaro('./caro-fs.js', function(e, data) {
     // catch error and data
 },{
-    encoding: 'utf8'
+    encoding: 'utf8',
     flag: null
 }); // - here is default options
 ```
-- **writeFile(path, data [encoding='utf8'] [flag=null]) - write file with data**
+- **writeFile(path, data [cb] [opt]) - write file with data**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_writefilesync_filename_data_options
 var data = cf.readFileCaro('./test.html');
-var r = cf.writeFileCaro('./test.html', data);
-```
+var r = cf.writeFileCaro('./test.html', data); // boolean
+var r2 = cf.readFileCaro('./test.html', function(e) {
+    // catch error
+},{
+    encoding: 'utf8',
+    flag: null,
+    mode: null
+}); // - here is default options
 ```
 - **getFsSize(path [fixed=1] [unit]) - get file size(bytes), or specific unit (KB/MB.../KiB/Mib....)**
 ```javascript
@@ -166,7 +170,7 @@ var r3 = cf.isDir('a', 'b', function(err, path, result){
 - **isFile(path...) - check if file**
 ```javascript
 var r = cf.isFile('./caro-fs.js'); // boolean
-var r2 = cf.isFile('./a','./caro-fs.js'); // return false is one of them not directory
+var r2 = cf.isFile('./a','./caro-fs.js'); // return false is one of them not file
 var r3 = cf.isFile('a', 'b', function(err, path, result){
     // catch error, path, if-file
 }); // boolean

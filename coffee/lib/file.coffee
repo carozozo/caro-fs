@@ -11,14 +11,14 @@
 # @param {string} [opt.flag=null]
 # @returns {*}
 ###
-self.readFile = (path, opt, cb) ->
-  data = false
+self.readFile = (path, cb, opt) ->
+  data = null
   err = false
   args = getArgs(arguments);
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
   encoding = opt.encoding or 'utf8'
-  flag = opt.flag or flag
+  flag = opt.flag or null
   try
     data = nFs.readFileSync(path,
       encoding: encoding
@@ -36,17 +36,28 @@ self.readFile = (path, opt, cb) ->
 # @param {*} data
 # @param {string} [encoding=utf8]
 # @param {string} [flag=null]
+# @param {int} [mode=438]
 # @returns {*}
 ###
-self.writeFile = (path, data, encoding = 'utf8', flag = null) ->
+self.writeFile = (path, data, cb, opt) ->
+  err = false
+  args = getArgs(arguments);
+  opt = args.obj[0] or {}
+  cb = args.fn[0] or null
+  encoding = opt.encoding or 'utf8'
+  flag = opt.flag or null
+  mode = opt.mode or null
   try
     nFs.writeFileSync path, data,
       encoding: encoding
       flag: flag
+      mode: mode
     return true
   catch e
     showErr(e)
-  false
+    err = e
+  caro.executeIfFn(cb, err)
+  !err
 
 ###*
 # get file size, default in bytes or set by unit

@@ -12,15 +12,15 @@
  * @param {string} [opt.flag=null]
  * @returns {*}
  */
-self.readFile = function(path, opt, cb) {
+self.readFile = function(path, cb, opt) {
   var args, data, e, encoding, err, flag;
-  data = false;
+  data = null;
   err = false;
   args = getArgs(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
   encoding = opt.encoding || 'utf8';
-  flag = opt.flag || flag;
+  flag = opt.flag || null;
   try {
     data = nFs.readFileSync(path, {
       encoding: encoding,
@@ -42,28 +42,33 @@ self.readFile = function(path, opt, cb) {
  * @param {*} data
  * @param {string} [encoding=utf8]
  * @param {string} [flag=null]
+ * @param {int} [mode=438]
  * @returns {*}
  */
 
-self.writeFile = function(path, data, encoding, flag) {
-  var e;
-  if (encoding == null) {
-    encoding = 'utf8';
-  }
-  if (flag == null) {
-    flag = null;
-  }
+self.writeFile = function(path, data, cb, opt) {
+  var args, e, encoding, err, flag, mode;
+  err = false;
+  args = getArgs(arguments);
+  opt = args.obj[0] || {};
+  cb = args.fn[0] || null;
+  encoding = opt.encoding || 'utf8';
+  flag = opt.flag || null;
+  mode = opt.mode || null;
   try {
     nFs.writeFileSync(path, data, {
       encoding: encoding,
-      flag: flag
+      flag: flag,
+      mode: mode
     });
     return true;
   } catch (_error) {
     e = _error;
     showErr(e);
+    err = e;
   }
-  return false;
+  caro.executeIfFn(cb, err);
+  return !err;
 };
 
 

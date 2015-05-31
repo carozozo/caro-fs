@@ -1,18 +1,22 @@
 do ->
 describe 'File', ->
   it 'readFile', ->
-    r = cf.readFile(__dirname + '/file_test2.coffee', (e)->
+    r = cf.readFile(__dirname + '/file_test2.coffee', (e, data)->
       e.should.be.a('object')
+      should.equal(data, null)
     );
-    r.should.be.false
-    r2 = cf.readFile(__dirname + '/file_test.coffee', (e)->
+    should.equal(r, null)
+    r2 = cf.readFile(__dirname + '/file_test.coffee', (e, data)->
       e.should.be.false
+      data.should.be.a('string')
     );
     r2.should.be.a('string')
 
   it 'writeFile', ->
-    r = cf.writeFile(__dirname + '/\/file_test2.coffee', '123');
-    cf.deleteFs(__dirname + '/\/file_test2.coffee');
+    r = cf.writeFile('./test.coffee', '中文', (e) ->
+      e.should.be.false
+    );
+    cf.deleteFs('./test.coffee');
     r.should.be.a('boolean')
 
   it 'getFsSize', ->
