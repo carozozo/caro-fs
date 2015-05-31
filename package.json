@@ -21,6 +21,9 @@
     "file system",
     "path"
   ],
+  "scripts": {
+    "test": "grunt test"
+  },
   "dependencies": {
     "caro": "latest"
   },
