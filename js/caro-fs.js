@@ -67,7 +67,7 @@ getFileSize = function(path) {
   if (caro.isNumber(path)) {
     return path;
   }
-  status = self.getFsStat(path);
+  status = self.getStat(path);
   if (status) {
     return status.size;
   }

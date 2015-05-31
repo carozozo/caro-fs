@@ -133,6 +133,12 @@ var r3 = cf.humanFeSize(10000000, 2, false); // '9.54 MiB'
 ```javascript
 cf.setFsTrace(true);
 ```
+- **getStat(path [type='l']) - get file stat**
+```javascript
+// https://nodejs.org/api/fs.html#fs_class_fs_stats
+// 'l' => lstatSync, 'f' => fstatSync, 's' => statSync
+var r = cf.getStat('./caro-fs.js','l');
+```
 - **exists(path... [cb]) - check file if exist**
 ```javascript
 var r = cf.exists('./caro-fs.js'); // boolean
@@ -165,25 +171,21 @@ var r3 = cf.isSymlink('a', 'b', function(err, path, result){
     // catch error, path, if-symbolic
 }); // boolean
 ```
-- **getFileType(path) - 取得檔案類型**
+- **getFileType(path) - get file type**
 ```javascript
-var r = cf.getFileType('./caro-fs.js'); // dir/file/link，不知道類型則為 ''
+var r = cf.getFileType('./caro-fs.js'); // dir/file/link，or ''
 ```
-- **deleteFs(path... [force=false]) - 刪除檔案及資料夾，其中一個刪除失敗或不存在則回傳 false**
+- **deleteFs(path... [force=false]) - delete file/directory **
 ```javascript
-var r = cf.getFileType('./1.js','./2.lnk'); // boolean
-var r2 = cf.getFileType('./test','./1.js','./2.lnk', function(e, path){
+var r = cf.deleteFs('./1.js','./2.lnk'); // boolean
+var r2 = cf.deleteFs('./test','./1.js','./2.lnk', function(err, path){
     // catch error and path
 }, true);  // boolean (force-delete if possible for folder)
 ```
-- **renameFs(path , newPath  [cb] [force=false]) - 檔案移動更名，失敗則回傳 false**
+- **renameFs(path, newPath [cb] [force=false]) - 檔案移動更名，失敗則回傳 false**
 ```javascript
 r = cf.renameFs('./a', './b/c', true); // bool
 r2 = cf.renameFs(['1.js', 'a/2.js'], ['3.js', '4.js'], function(err, path1, path2){
     // catch error and path
 }, true); // boolean (force-create folder for path2 if possible)
 ```
-- **getFsStat(path [type='l']) - 取得檔案資訊**
-```javascript
-// https://nodejs.org/api/fs.html#fs_class_fs_stats
-var r = cf.getFsStat('./caro-fs.js','l'); // l=lsataSync, f=fstatSync, s=statSync

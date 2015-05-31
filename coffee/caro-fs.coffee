@@ -58,7 +58,7 @@ showErr = (e) ->
   console.error(e) if traceMode
 getFileSize = (path) ->
   return path if caro.isNumber(path)
-  status = self.getFsStat(path)
+  status = self.getStat(path)
   return status.size if status
   return null
 

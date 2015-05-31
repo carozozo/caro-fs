@@ -67,7 +67,7 @@ getFileSize = function(path) {
   if (caro.isNumber(path)) {
     return path;
   }
-  status = self.getFsStat(path);
+  status = self.getStat(path);
   if (status) {
     return status.size;
   }
@@ -544,11 +544,48 @@ self.coverToFullPath = function(path) {
  */
 
 /**
+ * get file stat
+ * @param {string} path
+ * @param {string} [type=l] s = statSync, l = lstatSync, f = fstatSync
+ * @returns {*}
+ */
+var createTestFile;
+
+self.getStat = function(path, type) {
+  var aType, e, stat;
+  if (type == null) {
+    type = 'l';
+  }
+  stat = null;
+  aType = ['l', 's', 'f'];
+  type = aType.indexOf(type) > -1 ? type : aType[0];
+  try {
+    switch (type) {
+      case 's':
+        stat = nFs.lstatSync(path);
+        break;
+      case 'f':
+        stat = nFs.fstatSync(path);
+        break;
+      default:
+        stat = nFs.statSync(path);
+        break;
+    }
+  } catch (_error) {
+    e = _error;
+    showErr(e);
+  }
+  return stat;
+};
+
+
+/**
  * check file if exists, return false when anyone is false
  * @param {...string} path
  * @param {function} [cb] the callback-function for each path
  * @returns {*}
  */
+
 self.exists = function(path, cb) {
   var aPath, allPass, args;
   allPass = true;
@@ -595,7 +632,7 @@ self.isDir = function(path, cb) {
     pass = false;
     err = false;
     try {
-      stat = self.getFsStat(path);
+      stat = self.getStat(path);
       if (!stat.isDirectory()) {
         allPass = false;
         pass = false;
@@ -631,7 +668,7 @@ self.isFile = function(path) {
     pass = false;
     err = false;
     try {
-      stat = self.getFsStat(path);
+      stat = self.getStat(path);
       if (!stat.isFile()) {
         allPass = false;
         pass = false;
@@ -667,7 +704,7 @@ self.isSymlink = function(path) {
     pass = false;
     err = false;
     try {
-      stat = self.getFsStat(path);
+      stat = self.getStat(path);
       if (!stat.isSymbolicLink()) {
         allPass = false;
         pass = false;
@@ -695,11 +732,9 @@ self.getFileType = function(path) {
   r = '';
   if (self.isDir(path)) {
     r = 'dir';
-  }
-  if (self.isFile(path)) {
+  } else if (self.isFile(path)) {
     r = 'file';
-  }
-  if (self.isSymlink(path)) {
+  } else if (self.isSymlink(path)) {
     r = 'link';
   }
   return r;
@@ -721,7 +756,7 @@ self.deleteFs = function(path, cb, force) {
   args = getArgs(arguments);
   aPath = args.str;
   cb = args.fn[0];
-  force = args.bool[0];
+  force = args.bool[0] || false;
   tryAndCatchErr = function(fn) {
     var e;
     try {
@@ -734,7 +769,7 @@ self.deleteFs = function(path, cb, force) {
     }
   };
   deleteFileOrDir = function(path) {
-    if (self.isFile(path) && force) {
+    if (self.isFile(path)) {
       tryAndCatchErr(function() {
         return nFs.unlinkSync(path);
       });
@@ -746,8 +781,8 @@ self.deleteFs = function(path, cb, force) {
         files = nFs.readdirSync(path);
         return caro.forEach(files, function(file) {
           var subPath;
-          subPath = caro.normalizePath(path, file);
-          return deleteFileOrDir(subPath);
+          subPath = self.normalizePath(path, file);
+          return force && deleteFileOrDir(subPath);
         });
       });
     }
@@ -758,7 +793,7 @@ self.deleteFs = function(path, cb, force) {
   };
   caro.forEach(aPath, function(dirPath) {
     err = [];
-    err = deleteFileOrDir(dirPath);
+    deleteFileOrDir(dirPath);
     err = coverToFalseIfEmptyArr(err);
     return caro.executeIfFn(cb, err, dirPath);
   });
@@ -812,37 +847,9 @@ self.renameFs = function(path, newPath, cb, force) {
   return pass;
 };
 
-
-/**
- * get file stat
- * @param {string} path
- * @param {string} [type=l] s = statSync, l = lstatSync, f = fstatSync
- * @returns {*}
- */
-
-self.getFsStat = function(path, type) {
-  var aType, e, stat;
-  if (type == null) {
-    type = 'l';
-  }
-  stat = null;
-  aType = ['l', 's', 'f'];
-  type = aType.indexOf(type) > -1 ? type : aType[0];
-  try {
-    switch (type) {
-      case 's':
-        stat = nFs.lstatSync(path);
-        break;
-      case 'f':
-        stat = nFs.fstatSync(path);
-        break;
-      default:
-        stat = nFs.statSync(path);
-        break;
-    }
-  } catch (_error) {
-    e = _error;
-    showErr(e);
-  }
-  return stat;
-};
+(createTestFile = function() {
+  var data;
+  self.createDir('1/2');
+  data = self.readFile('caro-fs.js');
+  return self.writeFile('caro-fs2.js', data);
+})();

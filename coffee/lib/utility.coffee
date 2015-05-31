@@ -2,6 +2,33 @@
 # FileSystem
 ###
 ###*
+# get file stat
+# @param {string} path
+# @param {string} [type=l] s = statSync, l = lstatSync, f = fstatSync
+# @returns {*}
+###
+self.getStat = (path, type = 'l') ->
+  stat = null
+  aType = [
+    'l'
+    's'
+    'f'
+  ]
+  type = if aType.indexOf(type) > -1 then type else aType[0]
+  try
+    switch type
+      when 's'
+        stat = nFs.lstatSync(path)
+      when 'f'
+        stat = nFs.fstatSync(path)
+      else
+        stat = nFs.statSync(path)
+        break
+  catch e
+    showErr(e)
+  return stat
+
+###*
 # check file if exists, return false when anyone is false
 # @param {...string} path
 # @param {function} [cb] the callback-function for each path
@@ -43,7 +70,7 @@ self.isDir = (path, cb) ->
     pass = false
     err = false
     try
-      stat = self.getFsStat(path)
+      stat = self.getStat(path)
       if !stat.isDirectory()
         allPass = false
         pass = false
@@ -71,7 +98,7 @@ self.isFile = (path) ->
     pass = false
     err = false
     try
-      stat = self.getFsStat(path)
+      stat = self.getStat(path)
       if !stat.isFile()
         allPass = false
         pass = false
@@ -99,7 +126,7 @@ self.isSymlink = (path) ->
     pass = false
     err = false
     try
-      stat = self.getFsStat(path)
+      stat = self.getStat(path)
       if !stat.isSymbolicLink()
         allPass = false
         pass = false
@@ -120,9 +147,9 @@ self.getFileType = (path) ->
   r = ''
   if self.isDir(path)
     r = 'dir'
-  if self.isFile(path)
+  else if self.isFile(path)
     r = 'file'
-  if self.isSymlink(path)
+  else if self.isSymlink(path)
     r = 'link'
   r
 
@@ -139,7 +166,7 @@ self.deleteFs = (path, cb, force) ->
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
-  force = args.bool[0]
+  force = args.bool[0] or false
   tryAndCatchErr = (fn)->
     try
       fn()
@@ -148,7 +175,7 @@ self.deleteFs = (path, cb, force) ->
       pass = false
       err.push e
   deleteFileOrDir = (path) ->
-    if self.isFile(path) and force
+    if self.isFile(path)
       tryAndCatchErr(->
         nFs.unlinkSync(path)
       )
@@ -157,8 +184,8 @@ self.deleteFs = (path, cb, force) ->
       tryAndCatchErr(->
         files = nFs.readdirSync(path)
         caro.forEach(files, (file) ->
-          subPath = caro.normalizePath(path, file)
-          deleteFileOrDir(subPath)
+          subPath = self.normalizePath(path, file)
+          force and deleteFileOrDir(subPath)
         )
       )
     tryAndCatchErr(->
@@ -167,7 +194,7 @@ self.deleteFs = (path, cb, force) ->
     return err
   caro.forEach(aPath, (dirPath) ->
     err = [] # reset err in each path
-    err = deleteFileOrDir(dirPath)
+    deleteFileOrDir(dirPath)
     err = coverToFalseIfEmptyArr(err)
     caro.executeIfFn(cb, err, dirPath)
   )
@@ -210,30 +237,3 @@ self.renameFs = (path, newPath, cb, force = false) ->
     caro.executeIfFn(cb, err, path1, path2)
   )
   return pass
-
-###*
-# get file stat
-# @param {string} path
-# @param {string} [type=l] s = statSync, l = lstatSync, f = fstatSync
-# @returns {*}
-###
-self.getFsStat = (path, type = 'l') ->
-  stat = null
-  aType = [
-    'l'
-    's'
-    'f'
-  ]
-  type = if aType.indexOf(type) > -1 then type else aType[0]
-  try
-    switch type
-      when 's'
-        stat = nFs.lstatSync(path)
-      when 'f'
-        stat = nFs.fstatSync(path)
-      else
-        stat = nFs.statSync(path)
-        break
-  catch e
-    showErr(e)
-  return stat

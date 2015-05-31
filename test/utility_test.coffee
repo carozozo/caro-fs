@@ -4,6 +4,10 @@ describe.only 'Utility', ->
     r = cf.setFsTrace(false);
     r.should.be.boolean
 
+  #  it 'getStat', ->
+  #    r = cf.getStat('./cf.js');
+  #    r.should.be.a('object')
+
   it 'exists', ->
     r = cf.exists('./caro-fs.js', 'c', (e, path, pass) ->
       e.should.be.false
@@ -39,19 +43,31 @@ describe.only 'Utility', ->
       pass.should.be.boolean
     );
     r.should.be.a('boolean')
-#
-#  it 'getFileType', ->
-#    r = cf.getFileType('./cf');
-#    r2 = cf.getFileType('./cf.js');
-#    r.should.eq ''
-#    r2.should.eq 'file'
-#
-#  it 'deleteFs', ->
-#    r = cf.deleteFs('1', '2')
-#    r = cf.deleteFs('./src', './1.js', './2.lnk',
-#      (e, path) ->
-#    , true);
-#    r.should.be.a('boolean')
+
+  it 'getFileType', ->
+    r = cf.getFileType('./cf');
+    r2 = cf.getFileType('./caro-fs.js');
+    r.should.eq ''
+    r2.should.eq 'file'
+
+  it 'deleteFs', ->
+    (createTestFile = ()->
+      cf.createDir('1/2')
+      data = cf.readFile('caro-fs.js')
+      cf.writeFile('caro-fs2.js', data)
+    )();
+    r = cf.deleteFs('1', 'caro-fs2.js', (e, path) ->
+      path = path == '1' or path == 'caro-fs2.js'
+      e.should.be.failse
+      path.should.be.true
+    , true);
+    r2 = cf.deleteFs('./aaa','./js', (e, path) ->
+      e.should.be.a('array')
+      path = path == './aaa' or path == './js'
+      path.should.be.true
+    );
+    r.should.be.true
+    r2.should.be.false
 #
 #  it 'renameFs', ->
 #    r = cf.renameFs('./a', './b/c', true);
@@ -63,7 +79,3 @@ describe.only 'Utility', ->
 #    );
 #    r.should.be.a('boolean')
 #    r2.should.be.a('boolean')
-#
-#  it 'getFsStat', ->
-#    r = cf.getFsStat('./cf.js');
-#    r.should.be.a('object')
