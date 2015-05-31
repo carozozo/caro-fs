@@ -64,7 +64,7 @@ getFileSize = (path) ->
 
 ###*
 # set trace-mode, will console.error when got exception
-# @returns {boolean}
+# @returns {boolean} [bool=false]
 ###
 self.setFsTrace = (bool) ->
   traceMode = bool == true

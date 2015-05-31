@@ -77,7 +77,7 @@ getFileSize = function(path) {
 
 /**
  * set trace-mode, will console.error when got exception
- * @returns {boolean}
+ * @returns {boolean} [bool=false]
  */
 
 self.setFsTrace = function(bool) {
@@ -206,14 +206,14 @@ self.readDir = function(path, cb, opt) {
         layer: layer - 1,
         index: i
       };
-      if (self.isFsDir(filePath)) {
+      if (self.isDir(filePath)) {
         if (getDir && pushFile(oFileInfo) === false) {
           return false;
         }
         readDir(filePath, layer);
         return;
       }
-      if (self.isFsFile(filePath) && getFile && pushFile(oFileInfo) === false) {
+      if (self.isFile(filePath) && getFile && pushFile(oFileInfo) === false) {
         return false;
       }
     });
@@ -244,7 +244,7 @@ self.createDir = function(path, cb) {
     caro.forEach(aPath, function(eachDir) {
       var e, exists;
       subPath = self.normalizePath(subPath, eachDir);
-      exists = self.fsExists(subPath);
+      exists = self.exists(subPath);
       if (exists) {
         return;
       }
@@ -549,28 +549,31 @@ self.coverToFullPath = function(path) {
  * @param {function} [cb] the callback-function for each path
  * @returns {*}
  */
-self.fsExists = function(path, cb) {
-  var aPath, args, pass;
-  pass = true;
+self.exists = function(path, cb) {
+  var aPath, allPass, args;
+  allPass = true;
   args = getArgs(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
-    var e, err;
+    var e, err, pass;
+    pass = true;
     err = false;
     try {
       if (!nFs.existsSync(path)) {
+        allPass = false;
         pass = false;
       }
     } catch (_error) {
       e = _error;
       showErr(e);
+      allPass = false;
       pass = false;
       err = e;
     }
-    return caro.executeIfFn(cb, err, path);
+    return caro.executeIfFn(cb, err, path, pass);
   });
-  return pass;
+  return allPass;
 };
 
 
@@ -581,27 +584,32 @@ self.fsExists = function(path, cb) {
  * @returns {*}
  */
 
-self.isFsDir = function(path, cb) {
-  var aPath, args, pass;
-  pass = true;
+self.isDir = function(path, cb) {
+  var aPath, allPass, args;
+  allPass = true;
   args = getArgs(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
-    var e, err, stat;
+    var e, err, pass, stat;
+    pass = false;
     err = false;
     try {
       stat = self.getFsStat(path);
-      pass && (pass = stat.isDirectory());
+      if (!stat.isDirectory()) {
+        allPass = false;
+        pass = false;
+      }
     } catch (_error) {
       e = _error;
       showErr(e);
+      allPass = false;
       pass = false;
       err = e;
     }
-    return caro.executeIfFn(cb, err, path);
+    return caro.executeIfFn(cb, err, path, pass);
   });
-  return pass;
+  return allPass;
 };
 
 
@@ -612,27 +620,32 @@ self.isFsDir = function(path, cb) {
  * @returns {*}
  */
 
-self.isFsFile = function(path) {
-  var aPath, args, cb, pass;
-  pass = true;
+self.isFile = function(path) {
+  var aPath, allPass, args, cb;
+  allPass = true;
   args = getArgs(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
-    var e, err, stat;
+    var e, err, pass, stat;
+    pass = false;
     err = false;
     try {
       stat = self.getFsStat(path);
-      pass && (pass = stat.isFile());
+      if (!stat.isFile()) {
+        allPass = false;
+        pass = false;
+      }
     } catch (_error) {
       e = _error;
       showErr(e);
+      allPass = false;
       pass = false;
       err = e;
     }
-    return caro.executeIfFn(cb, err, path);
+    return caro.executeIfFn(cb, err, path, pass);
   });
-  return pass;
+  return allPass;
 };
 
 
@@ -643,27 +656,33 @@ self.isFsFile = function(path) {
  * @returns {*}
  */
 
-self.isFsSymlink = function(path) {
-  var aPath, args, cb, pass;
-  pass = true;
+self.isSymlink = function(path) {
+  var aPath, allPass, args, cb;
+  allPass = true;
   args = getArgs(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
-    var e, err, stat;
+    var e, err, pass, stat;
+    pass = false;
     err = false;
     try {
       stat = self.getFsStat(path);
-      pass && (pass = stat.isSymbolicLink());
+      console.log('stat=', stat);
+      if (!stat.isSymbolicLink()) {
+        allPass = false;
+        pass = false;
+      }
     } catch (_error) {
       e = _error;
       showErr(e);
+      allPass = false;
       pass = false;
       err = e;
     }
-    return caro.executeIfFn(cb, err, path);
+    return caro.executeIfFn(cb, err, path, pass);
   });
-  return pass;
+  return allPass;
 };
 
 
@@ -675,13 +694,13 @@ self.isFsSymlink = function(path) {
 self.getFileType = function(path) {
   var r;
   r = '';
-  if (self.isFsDir(path)) {
+  if (self.isDir(path)) {
     r = 'dir';
   }
-  if (self.isFsFile(path)) {
+  if (self.isFile(path)) {
     r = 'file';
   }
-  if (self.isFsSymlink(path)) {
+  if (self.isSymlink(path)) {
     r = 'link';
   }
   return r;
@@ -716,13 +735,13 @@ self.deleteFs = function(path, cb, force) {
     }
   };
   deleteFileOrDir = function(path) {
-    if (self.isFsFile(path) && force) {
+    if (self.isFile(path) && force) {
       tryAndCatchErr(function() {
         return nFs.unlinkSync(path);
       });
       return;
     }
-    if (self.isFsDir(path)) {
+    if (self.isDir(path)) {
       tryAndCatchErr(function() {
         var files;
         files = nFs.readdirSync(path);
@@ -778,7 +797,7 @@ self.renameFs = function(path, newPath, cb, force) {
     path1 = pathMap[0];
     path2 = pathMap[1];
     try {
-      if (force && self.fsExists(path1)) {
+      if (force && self.exists(path1)) {
         dirPath2 = self.getDirPath(path2);
         self.createDir(dirPath2);
       }

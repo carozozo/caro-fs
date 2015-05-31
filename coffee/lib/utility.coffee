@@ -7,22 +7,26 @@
 # @param {function} [cb] the callback-function for each path
 # @returns {*}
 ###
-self.fsExists = (path, cb) ->
-  pass = true
+self.exists = (path, cb) ->
+  allPass = true
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
+    pass = true
     err = false
     try
-      pass = false if !nFs.existsSync(path)
+      if !nFs.existsSync(path)
+        allPass = false
+        pass = false
     catch e
       showErr(e)
+      allPass = false
       pass = false
       err = e
-    caro.executeIfFn(cb, err, path)
+    caro.executeIfFn(cb, err, path, pass)
   )
-  return pass
+  return allPass
 
 ###*
 # check if folder, return false when anyone is false
@@ -30,23 +34,27 @@ self.fsExists = (path, cb) ->
 # @param {function} [cb] the callback-function for each path
 # @returns {*}
 ###
-self.isFsDir = (path, cb) ->
-  pass = true
+self.isDir = (path, cb) ->
+  allPass = true
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
+    pass = false
     err = false
     try
       stat = self.getFsStat(path)
-      pass and pass = stat.isDirectory()
+      if !stat.isDirectory()
+        allPass = false
+        pass = false
     catch e
       showErr(e)
+      allPass = false
       pass = false
       err = e
-    caro.executeIfFn(cb, err, path)
+    caro.executeIfFn(cb, err, path, pass)
   )
-  return pass
+  return allPass
 
 ###*
 # check if file, return false when anyone is false
@@ -54,23 +62,27 @@ self.isFsDir = (path, cb) ->
 # @param {function} [cb] the callback-function for each path
 # @returns {*}
 ###
-self.isFsFile = (path) ->
-  pass = true
+self.isFile = (path) ->
+  allPass = true
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
+    pass = false
     err = false
     try
       stat = self.getFsStat(path)
-      pass and pass = stat.isFile()
+      if !stat.isFile()
+        allPass = false
+        pass = false
     catch e
       showErr(e)
+      allPass = false
       pass = false
       err = e
-    caro.executeIfFn(cb, err, path)
+    caro.executeIfFn(cb, err, path, pass)
   )
-  return pass
+  return allPass
 
 ###*
 # check if symbolic link, return false when anyone is false
@@ -78,23 +90,27 @@ self.isFsFile = (path) ->
 # @param {...string} path
 # @returns {*}
 ###
-self.isFsSymlink = (path) ->
-  pass = true
+self.isSymlink = (path) ->
+  allPass = true
   args = getArgs(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
+    pass = false
     err = false
     try
       stat = self.getFsStat(path)
-      pass and pass = stat.isSymbolicLink()
+      if !stat.isSymbolicLink()
+        allPass = false
+        pass = false
     catch e
       showErr(e)
+      allPass = false
       pass = false
       err = e
-    caro.executeIfFn(cb, err, path)
+    caro.executeIfFn(cb, err, path, pass)
   )
-  return pass
+  return allPass
 
 ###*
 # @param {string} path
@@ -102,11 +118,11 @@ self.isFsSymlink = (path) ->
 ###
 self.getFileType = (path) ->
   r = ''
-  if self.isFsDir(path)
+  if self.isDir(path)
     r = 'dir'
-  if self.isFsFile(path)
+  if self.isFile(path)
     r = 'file'
-  if self.isFsSymlink(path)
+  if self.isSymlink(path)
     r = 'link'
   r
 
@@ -132,12 +148,12 @@ self.deleteFs = (path, cb, force) ->
       pass = false
       err.push e
   deleteFileOrDir = (path) ->
-    if self.isFsFile(path) and force
+    if self.isFile(path) and force
       tryAndCatchErr(->
         nFs.unlinkSync(path)
       )
       return
-    if self.isFsDir(path)
+    if self.isDir(path)
       tryAndCatchErr(->
         files = nFs.readdirSync(path)
         caro.forEach(files, (file) ->
@@ -183,7 +199,7 @@ self.renameFs = (path, newPath, cb, force = false) ->
     path1 = pathMap[0]
     path2 = pathMap[1]
     try
-      if force and self.fsExists(path1)
+      if force and self.exists(path1)
         dirPath2 = self.getDirPath(path2)
         self.createDir dirPath2
       nFs.renameSync path1, path2

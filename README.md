@@ -127,38 +127,42 @@ var r3 = cf.humanFeSize(10000000, 2, false); // '9.54 MiB'
     var r3 = cf.coverToFullPath('/path/from/root/caro-fs.js'); // '/path/from/root/caro-fs.js'
 ```
 
-### FileSystem
+### Utility
 [Back to Index](#index)
-- **setFsTrace(bool) - 設定檔案操作發生錯誤時，是否顯示 console.error (default=false)**
+- **setFsTrace(bool) - if console.error when got exception (default=false)**
 ```javascript
 cf.setFsTrace(true);
 ```
-- **fsExists(path... [cb]) - 判斷檔案/資料夾是否存在，其中一個不存在則回傳 false**
+- **exists(path... [cb]) - check file if exist**
 ```javascript
-var r = cf.fsExists('./a', './caro-fs.js'); // boolean
-var r2 = cf.fsExists('a', 'b', function(err, path){
-    // catch error and path
+var r = cf.exists('./caro-fs.js'); // boolean
+var r2 = cf.exists('./a', './caro-fs.js'); // return false is one of them not exists
+var r3 = cf.exists('a', 'b', function(err, path, result){
+    // catch error, path, if-exists
 }); // boolean
 ```
-- **isFsDir(path... [cb]) - 判斷是否為資料夾，其中一個不是資料夾或不存在則回傳 false**
+- **isDir(path... [cb]) - check if directory**
 ```javascript
-var r = cf.isFsDir('./a','./caro-fs.js'); // boolean
-var r2 = cf.isFsDir('a', 'b', function(err, path){
-    // catch error and path
+var r = cf.isDir('./a'); // boolean
+var r2 = cf.isDir('./a', './caro-fs.js'); // return false is one of them not directory
+var r3 = cf.isDir('a', 'b', function(err, path, result){
+    // catch error, path, if-directory
 }); // boolean
 ```
-- **isFsFile(path...) - 判斷是否為檔案，其中一個不是檔案或不存在則回傳 false**
+- **isFile(path...) - check if file**
 ```javascript
-var r = cf.isFsFile('./a','./caro-fs.js'); // boolean
-var r2 = cf.isFsFile('a', 'b', function(err, path){
-    // catch error and path
+var r = cf.isFile('./caro-fs.js'); // boolean
+var r2 = cf.isFile('./a','./caro-fs.js'); // return false is one of them not directory
+var r3 = cf.isFile('a', 'b', function(err, path, result){
+    // catch error, path, if-file
 }); // boolean
 ```
-- **isFsSymlink(path...) - 判斷是否為 symbolic link，其中一個不是 symbolic link 或不存在則回傳 false**
+- **isSymlink(path...) - check if symbolic link**
 ```javascript
-var r = cf.isFsSymlink('./a','./caro-fs.js'); // boolean
-var r2 = cf.isFsSymlink('a', 'b', function(err, path){
-    // catch error and path
+var r = cf.isSymlink('./a','./caro-fs.js'); // boolean
+var r2 = cf.isSymlink('./a','./caro-fs.js'); // return false is one of them not directory
+var r3 = cf.isSymlink('a', 'b', function(err, path, result){
+    // catch error, path, if-symbolic
 }); // boolean
 ```
 - **getFileType(path) - 取得檔案類型**

@@ -118,14 +118,14 @@ self.readDir = function(path, cb, opt) {
         layer: layer - 1,
         index: i
       };
-      if (self.isFsDir(filePath)) {
+      if (self.isDir(filePath)) {
         if (getDir && pushFile(oFileInfo) === false) {
           return false;
         }
         readDir(filePath, layer);
         return;
       }
-      if (self.isFsFile(filePath) && getFile && pushFile(oFileInfo) === false) {
+      if (self.isFile(filePath) && getFile && pushFile(oFileInfo) === false) {
         return false;
       }
     });
@@ -156,7 +156,7 @@ self.createDir = function(path, cb) {
     caro.forEach(aPath, function(eachDir) {
       var e, exists;
       subPath = self.normalizePath(subPath, eachDir);
-      exists = self.fsExists(subPath);
+      exists = self.exists(subPath);
       if (exists) {
         return;
       }

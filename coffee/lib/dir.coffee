@@ -85,11 +85,11 @@ self.readDir = (path, cb, opt = {}) ->
         fileType: fileType
         layer: layer - 1
         index: i
-      if self.isFsDir(filePath)
+      if self.isDir(filePath)
         return false if getDir and pushFile(oFileInfo) == false
         readDir filePath, layer
         return
-      return false if self.isFsFile(filePath) and getFile and pushFile(oFileInfo) == false
+      return false if self.isFile(filePath) and getFile and pushFile(oFileInfo) == false
     )
   readDir path, countLayer
   return null
@@ -114,7 +114,7 @@ self.createDir = (path, cb) ->
     ])
     caro.forEach(aPath, (eachDir)->
       subPath = self.normalizePath(subPath, eachDir)
-      exists = self.fsExists(subPath)
+      exists = self.exists(subPath)
       return if exists
       try
         nFs.mkdirSync subPath

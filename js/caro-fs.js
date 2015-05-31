@@ -77,7 +77,7 @@ getFileSize = function(path) {
 
 /**
  * set trace-mode, will console.error when got exception
- * @returns {boolean}
+ * @returns {boolean} [bool=false]
  */
 
 self.setFsTrace = function(bool) {

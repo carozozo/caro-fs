@@ -1,27 +1,44 @@
-#do ->
-#describe.only 'Utility', ->
-#  it 'setFsTrace', ->
-#    r = cf.setFsTrace(false);
-#    r.should.be.a('boolean')
-#  it 'fsExists', ->
-#    r = cf.fsExists('./a/b', 'c', (e, path) ->
-#    );
-#    r.should.be.a('boolean')
-#
-#  it 'isFsDir', ->
-#    r = cf.isFsDir('./a', 'c', (e, path) ->
-#    );
-#    r.should.be.a('boolean')
-#
-#  it 'isFsFile', ->
-#    r = cf.isFsFile('./caro', (e, path) ->
-#    );
-#    r.should.be.a('boolean')
-#
-#  it 'isFsSymlink', ->
-#    r = cf.isFsSymlink('./cf', (e, path) ->
-#    );
-#    r.should.be.a('boolean')
+do ->
+describe.only 'Utility', ->
+  it 'setFsTrace', ->
+    r = cf.setFsTrace(false);
+    r.should.be.boolean
+
+  it 'exists', ->
+    r = cf.exists('./caro-fs.js', 'c', (e, path, pass) ->
+      e.should.be.false
+      path = path == './caro-fs.js' or path == 'c'
+      path.should.be.true
+      pass.should.be.boolean
+    );
+    r.should.be.boolean
+
+  it 'isDir', ->
+    r = cf.isDir('./caro-fs.js', './js', (e, path, pass) ->
+      e.should.be.false
+      path = path == './caro-fs.js' or path == './js'
+      path.should.be.true
+      pass.should.be.boolean
+    );
+    r.should.be.a('boolean')
+
+  it 'isFile', ->
+    r = cf.isFile('./caro-fs.js', './js', (e, path, pass) ->
+      e.should.be.false
+      path = path == './caro-fs.js' or path == './js'
+      path.should.be.true
+      pass.should.be.boolean
+    );
+    r.should.be.a('boolean')
+
+  it 'isSymlink', ->
+    r = cf.isSymlink('./caro-fs.js', './js', (e, path, pass) ->
+      e.should.be.false
+      path = path == './caro-fs.js' or path == './js'
+      path.should.be.true
+      pass.should.be.boolean
+    );
+    r.should.be.a('boolean')
 #
 #  it 'getFileType', ->
 #    r = cf.getFileType('./cf');
