@@ -66,7 +66,20 @@ var r = caro.readFileCaro('./test.html');
 var data = caro.readFileCaro('./test.html');
 var r = caro.writeFileCaro('./test.html', data);
 ```
-
+```
+- **getFsSize(path [fixed=1] [unit]) - 取得檔案大小(bytes)，或指定以「特定單位」回傳(KB/MB.../KiB/Mib....)**
+```javascript
+var r = caro.getFsSize('./caro.js'); // e.g. 439078
+var r2 = caro.getFsSize('./caro.js', 'mb'); // e.g. 439 
+var r3 = caro.getFsSize(123000, 5, 'gib'); // 0.1173
+```
+- **humanFeSize(bytes [fixed=1] [si=false]) - 將檔案大小轉為易讀格式**
+```javascript
+// http://en.wikipedia.org/wiki/File_size
+var r = caro.humanFeSize('./caro.js'); // e.g. '439.1 KB'
+var r2 = caro.humanFeSize('./caro.js', 3); // e.g. '439.078 KB'
+var r3 = caro.humanFeSize(10000000, 2, false); // '9.54 MiB'
+```
 ### Path
 [Back to Index](#index)
 - **setAbsolutePath(path) - set root absolute path**
@@ -170,17 +183,3 @@ r2 = caro.renameFs(['1.js', 'a/2.js'], ['3.js', '4.js'], function(err, path1, pa
 ```javascript
 // https://nodejs.org/api/fs.html#fs_class_fs_stats
 var r = caro.getFsStat('./caro.js','l'); // l=lsataSync, f=fstatSync, s=statSync
-```
-- **getFsSize(path [fixed=1] [unit]) - 取得檔案大小(bytes)，或指定以「特定單位」回傳(KB/MB.../KiB/Mib....)**
-```javascript
-var r = caro.getFsSize('./caro.js'); // e.g. 439078
-var r2 = caro.getFsSize('./caro.js', 'mb'); // e.g. 439 
-var r3 = caro.getFsSize(123000, 5, 'gib'); // 0.1173
-```
-- **humanFeSize(bytes [fixed=1] [si=false]) - 將檔案大小轉為易讀格式**
-```javascript
-// http://en.wikipedia.org/wiki/File_size
-var r = caro.humanFeSize('./caro.js'); // e.g. '439.1 KB'
-var r2 = caro.humanFeSize('./caro.js', 3); // e.g. '439.078 KB'
-var r3 = caro.humanFeSize(10000000, 2, false); // '9.54 MiB'
-```
