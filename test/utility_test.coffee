@@ -1,5 +1,5 @@
 #do ->
-#describe 'Utility', ->
+#describe.only 'Utility', ->
 #  it 'setFsTrace', ->
 #    r = cf.setFsTrace(false);
 #    r.should.be.a('boolean')

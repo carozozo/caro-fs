@@ -69,7 +69,7 @@ var r = cf.writeFileCaro('./test.html', data);
 ```
 - **getFsSize(path [fixed=1] [unit]) - get file size(bytes), or specific unit (KB/MB.../KiB/Mib....)**
 ```javascript
-var r = cf.getFsSize('./cf.js'); // e.g. 439078
+var r = cf.getFsSize('./caro-fs.js'); // e.g. 439078
 var r2 = cf.getFsSize('./fileNotExists.js'); // null 
 var r3 = cf.getFsSize(123000, 5, 'gib'); // 0.1173
 ```
@@ -100,31 +100,31 @@ var r3 = cf.humanFeSize(10000000, 2, false); // '9.54 MiB'
 - **isFullPath(path...) - check if absolute path**
 ```javascript
     cf.setAbsolutePath('/path/root');
-    var r = cf.isFullPath('/path/root/cf.js'); // true
-    var r2 = cf.isFullPath('/path/root/cf.js', '/path2'); // false
+    var r = cf.isFullPath('/path/root/caro-fs.js'); // true
+    var r2 = cf.isFullPath('/path/root/caro-fs.js', '/path2'); // false
 ```
 - **getDirPath(path) - get dir-path of file**
 ```javascript
     var r = cf.getDirPath('/path/from/root'); // '/path/from'
-    var r2 = cf.getDirPath('/path/from/root/cf.js'); // '/path/from/root'
+    var r2 = cf.getDirPath('/path/from/root/caro-fs.js'); // '/path/from/root'
 ```
 - **getFileName(path [getFull=true]) - get file name**
 ```javascript
     var r = cf.getFileName('/path/from/root'); // 'root'
-    var r2 = cf.getFileName('/path/from/root/cf.js'); // 'cf.js'
-    var r3 = cf.getFileName('/path/from/root/cf.js', false); // 'caro'
+    var r2 = cf.getFileName('/path/from/root/caro-fs.js'); // 'caro-fs.js'
+    var r3 = cf.getFileName('/path/from/root/caro-fs.js', false); // 'caro'
 ```
 - **getExtendName(path [withDot=true]) - get extend-name of file**
 ```javascript
-    var r = cf.getExtendName('cf.js'); // '.js'
-    var r2 = cf.getExtendName('cf.js.bk', false); // 'bk'
+    var r = cf.getExtendName('caro-fs.js'); // '.js'
+    var r2 = cf.getExtendName('caro-fs.js.bk', false); // 'bk'
 ```
 - **coverToFullPath(path) - cover to absolute path**
 ```javascript
     cf.setAbsolutePath('/path/from/root');
-    var r = cf.coverToFullPath('cf.js');  // '/path/from/root/cf.js'
-    var r2 = cf.coverToFullPath('other', 'cf.js'); // '/path/from/root/other/cf.js'
-    var r3 = cf.coverToFullPath('/path/from/root/cf.js'); // '/path/from/root/cf.js'
+    var r = cf.coverToFullPath('caro-fs.js');  // '/path/from/root/caro-fs.js'
+    var r2 = cf.coverToFullPath('other', 'caro-fs.js'); // '/path/from/root/other/caro-fs.js'
+    var r3 = cf.coverToFullPath('/path/from/root/caro-fs.js'); // '/path/from/root/caro-fs.js'
 ```
 
 ### FileSystem
@@ -135,35 +135,35 @@ cf.setFsTrace(true);
 ```
 - **fsExists(path... [cb]) - 判斷檔案/資料夾是否存在，其中一個不存在則回傳 false**
 ```javascript
-var r = cf.fsExists('./a', './cf.js'); // boolean
+var r = cf.fsExists('./a', './caro-fs.js'); // boolean
 var r2 = cf.fsExists('a', 'b', function(err, path){
     // catch error and path
 }); // boolean
 ```
 - **isFsDir(path... [cb]) - 判斷是否為資料夾，其中一個不是資料夾或不存在則回傳 false**
 ```javascript
-var r = cf.isFsDir('./a','./cf.js'); // boolean
+var r = cf.isFsDir('./a','./caro-fs.js'); // boolean
 var r2 = cf.isFsDir('a', 'b', function(err, path){
     // catch error and path
 }); // boolean
 ```
 - **isFsFile(path...) - 判斷是否為檔案，其中一個不是檔案或不存在則回傳 false**
 ```javascript
-var r = cf.isFsFile('./a','./cf.js'); // boolean
+var r = cf.isFsFile('./a','./caro-fs.js'); // boolean
 var r2 = cf.isFsFile('a', 'b', function(err, path){
     // catch error and path
 }); // boolean
 ```
 - **isFsSymlink(path...) - 判斷是否為 symbolic link，其中一個不是 symbolic link 或不存在則回傳 false**
 ```javascript
-var r = cf.isFsSymlink('./a','./cf.js'); // boolean
+var r = cf.isFsSymlink('./a','./caro-fs.js'); // boolean
 var r2 = cf.isFsSymlink('a', 'b', function(err, path){
     // catch error and path
 }); // boolean
 ```
 - **getFileType(path) - 取得檔案類型**
 ```javascript
-var r = cf.getFileType('./cf.js'); // dir/file/link，不知道類型則為 ''
+var r = cf.getFileType('./caro-fs.js'); // dir/file/link，不知道類型則為 ''
 ```
 - **deleteFs(path... [force=false]) - 刪除檔案及資料夾，其中一個刪除失敗或不存在則回傳 false**
 ```javascript
@@ -182,4 +182,4 @@ r2 = cf.renameFs(['1.js', 'a/2.js'], ['3.js', '4.js'], function(err, path1, path
 - **getFsStat(path [type='l']) - 取得檔案資訊**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_class_fs_stats
-var r = cf.getFsStat('./cf.js','l'); // l=lsataSync, f=fstatSync, s=statSync
+var r = cf.getFsStat('./caro-fs.js','l'); // l=lsataSync, f=fstatSync, s=statSync

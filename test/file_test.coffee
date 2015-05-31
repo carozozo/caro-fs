@@ -1,5 +1,5 @@
 do ->
-describe.only 'File', ->
+describe 'File', ->
   it 'readFile', ->
     r = cf.readFile(__dirname + '/file_test.coffee');
     r.should.be.a('string')
