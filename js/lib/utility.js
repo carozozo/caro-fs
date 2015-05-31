@@ -9,8 +9,6 @@
  * @param {string} [type=l] s = statSync, l = lstatSync, f = fstatSync
  * @returns {*}
  */
-var createTestFile;
-
 self.getStat = function(path, type) {
   var aType, e, stat;
   if (type == null) {
@@ -306,10 +304,3 @@ self.renameFs = function(path, newPath, cb, force) {
   });
   return pass;
 };
-
-(createTestFile = function() {
-  var data;
-  self.createDir('1/2');
-  data = self.readFile('caro-fs.js');
-  return self.writeFile('caro-fs2.js', data);
-})();
