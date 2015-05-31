@@ -1,6 +1,6 @@
 
 /**
- * FileSystem
+ * Utility
  */
 
 /**
@@ -299,4 +299,9 @@ self.renameFs = function(path, newPath, cb, force) {
     return caro.executeIfFn(cb, err, path1, path2);
   });
   return pass;
+};
+
+self.copyFs = function(path, destPath, cb, force) {
+  var data;
+  return data = self.readFile(path, {});
 };

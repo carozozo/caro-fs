@@ -19,7 +19,7 @@ self.readFile = function(path, cb, opt) {
   args = getArgs(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
-  encoding = opt.encoding || 'utf8';
+  encoding = opt.encoding || null;
   flag = opt.flag || null;
   try {
     data = nFs.readFileSync(path, {
@@ -52,7 +52,7 @@ self.writeFile = function(path, data, cb, opt) {
   args = getArgs(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
-  encoding = opt.encoding || 'utf8';
+  encoding = opt.encoding || null;
   flag = opt.flag || null;
   mode = opt.mode || null;
   try {

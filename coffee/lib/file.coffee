@@ -17,7 +17,7 @@ self.readFile = (path, cb, opt) ->
   args = getArgs(arguments);
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
-  encoding = opt.encoding or 'utf8'
+  encoding = opt.encoding or null
   flag = opt.flag or null
   try
     data = nFs.readFileSync(path,
@@ -44,7 +44,7 @@ self.writeFile = (path, data, cb, opt) ->
   args = getArgs(arguments);
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
-  encoding = opt.encoding or 'utf8'
+  encoding = opt.encoding or null
   flag = opt.flag or null
   mode = opt.mode or null
   try

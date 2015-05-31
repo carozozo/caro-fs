@@ -293,7 +293,7 @@ self.readFile = function(path, cb, opt) {
   args = getArgs(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
-  encoding = opt.encoding || 'utf8';
+  encoding = opt.encoding || null;
   flag = opt.flag || null;
   try {
     data = nFs.readFileSync(path, {
@@ -326,7 +326,7 @@ self.writeFile = function(path, data, cb, opt) {
   args = getArgs(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
-  encoding = opt.encoding || 'utf8';
+  encoding = opt.encoding || null;
   flag = opt.flag || null;
   mode = opt.mode || null;
   try {
@@ -684,7 +684,7 @@ self.getFileType = function(path) {
 
 
 /**
- * FileSystem
+ * Utility
  */
 
 /**
@@ -983,4 +983,9 @@ self.renameFs = function(path, newPath, cb, force) {
     return caro.executeIfFn(cb, err, path1, path2);
   });
   return pass;
+};
+
+self.copyFs = function(path, destPath, cb, force) {
+  var data;
+  return data = self.readFile(path, {});
 };
