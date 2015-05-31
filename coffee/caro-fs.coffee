@@ -33,6 +33,7 @@ getArgs = (args) ->
   aBool = []
   aArr = []
   aNum = []
+  aObj = []
   caro.forEach(args, (arg) ->
     if caro.isFunction(arg)
       aFn.push arg
@@ -48,12 +49,15 @@ getArgs = (args) ->
       return
     if caro.isNumber(arg)
       aNum.push arg
+    if caro.isPlainObject(arg)
+      aObj.push(arg)
   )
   fn: aFn
   bool: aBool
   str: aStr
   arr: aArr
   num: aNum
+  obj: aObj
 showErr = (e) ->
   console.error(e) if traceMode
 getFileSize = (path) ->

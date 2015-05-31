@@ -1,11 +1,18 @@
 do ->
 describe 'File', ->
   it 'readFile', ->
-    r = cf.readFile(__dirname + '/file_test.coffee');
-    r.should.be.a('string')
+    r = cf.readFile(__dirname + '/file_test2.coffee', (e)->
+      e.should.be.a('object')
+    );
+    r.should.be.false
+    r2 = cf.readFile(__dirname + '/file_test.coffee', (e)->
+      e.should.be.false
+    );
+    r2.should.be.a('string')
 
   it 'writeFile', ->
     r = cf.writeFile(__dirname + '/\/file_test2.coffee', '123');
+    cf.deleteFs(__dirname + '/\/file_test2.coffee');
     r.should.be.a('boolean')
 
   it 'getFsSize', ->

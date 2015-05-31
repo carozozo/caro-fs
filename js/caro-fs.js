@@ -20,12 +20,13 @@ fileSizeUnits1 = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
 
 getArgs = function(args) {
-  var aArr, aBool, aFn, aNum, aStr;
+  var aArr, aBool, aFn, aNum, aObj, aStr;
   aStr = [];
   aFn = [];
   aBool = [];
   aArr = [];
   aNum = [];
+  aObj = [];
   caro.forEach(args, function(arg) {
     if (caro.isFunction(arg)) {
       aFn.push(arg);
@@ -44,7 +45,10 @@ getArgs = function(args) {
       return;
     }
     if (caro.isNumber(arg)) {
-      return aNum.push(arg);
+      aNum.push(arg);
+    }
+    if (caro.isPlainObject(arg)) {
+      return aObj.push(arg);
     }
   });
   return {
@@ -52,7 +56,8 @@ getArgs = function(args) {
     bool: aBool,
     str: aStr,
     arr: aArr,
-    num: aNum
+    num: aNum,
+    obj: aObj
   };
 };
 

@@ -26,7 +26,7 @@ var r2 = cf.isEmptyDir('/1', '/2', function (err, path){
 - **readDirCb(path, cb [opt]) - get file-info under dir**
 ```javascript
 cf.readDirCb('../src', function(err, oFileInfo) {
-    // you can stop call-back by return false
+    // you can stop callback by return false
     console.log(oFileInfo); 
     console.log(oFileInfo.filename);
     // filename
@@ -44,7 +44,7 @@ cf.readDirCb('../src', function(err, oFileInfo) {
     getDir: true, // if get dir
     getFile: true, // if get file
     getByExtend: false // e.g. 'js,html' => only get .js and .html files
-}); - this is default options
+}); // - here is default options
 ```
 - **createDir(path... [cb]) - create folder**
 ```javascript
@@ -55,10 +55,18 @@ var r2 = cf.createDir('./\/test','test2/sub_test', function (err, path){
 ```
 
 ### File
-- **readFile(path [encoding='utf8'] [flag=null]) - read file content**
+- **readFile(path [cb] [opt]) - read file content**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
-var r = cf.readFileCaro('./test.html');
+var r = cf.readFileCaro('./caro-fs.js',function(e, data) {
+    // catch error and data
+}); // string of data or false
+var r2 = cf.readFileCaro('./caro-fs.js',function(e, data) {
+    // catch error and data
+},{
+    encoding: 'utf8'
+    flag: null
+}); // - here is default options
 ```
 - **writeFile(path, data [encoding='utf8'] [flag=null]) - write file with data**
 ```javascript

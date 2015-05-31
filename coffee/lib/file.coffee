@@ -5,26 +5,37 @@
 ###*
 # read file content, return false if failed
 # @param {string} path
-# @param {?string} [encoding=utf8]
-# @param {?string} [flag=null]
+# @param {function} [cb] the callback function that passing error and data
+# @param {object} [opt]
+# @param {string} [opt.encoding=utf8]
+# @param {string} [opt.flag=null]
 # @returns {*}
 ###
-self.readFile = (path, encoding = 'utf8', flag = null) ->
+self.readFile = (path, opt, cb) ->
+  data = false
+  err = false
+  args = getArgs(arguments);
+  opt = args.obj[0] or {}
+  cb = args.fn[0] or null
+  encoding = opt.encoding or 'utf8'
+  flag = opt.flag or flag
   try
-    return nFs.readFileSync(path,
+    data = nFs.readFileSync(path,
       encoding: encoding
       flag: flag
     )
   catch e
     showErr(e)
-  false
+    err = e
+  caro.executeIfFn(cb, err, data)
+  data
 
 ###*
 # write data to file, return false if failed
 # @param {string} path
 # @param {*} data
-# @param {?string} [encoding=utf8]
-# @param {?string} [flag=null]
+# @param {string} [encoding=utf8]
+# @param {string} [flag=null]
 # @returns {*}
 ###
 self.writeFile = (path, data, encoding = 'utf8', flag = null) ->

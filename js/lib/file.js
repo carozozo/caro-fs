@@ -6,28 +6,33 @@
 /**
  * read file content, return false if failed
  * @param {string} path
- * @param {?string} [encoding=utf8]
- * @param {?string} [flag=null]
+ * @param {function} [cb] the callback function that passing error and data
+ * @param {object} [opt]
+ * @param {string} [opt.encoding=utf8]
+ * @param {string} [opt.flag=null]
  * @returns {*}
  */
-self.readFile = function(path, encoding, flag) {
-  var e;
-  if (encoding == null) {
-    encoding = 'utf8';
-  }
-  if (flag == null) {
-    flag = null;
-  }
+self.readFile = function(path, opt, cb) {
+  var args, data, e, encoding, err, flag;
+  data = false;
+  err = false;
+  args = getArgs(arguments);
+  opt = args.obj[0] || {};
+  cb = args.fn[0] || null;
+  encoding = opt.encoding || 'utf8';
+  flag = opt.flag || flag;
   try {
-    return nFs.readFileSync(path, {
+    data = nFs.readFileSync(path, {
       encoding: encoding,
       flag: flag
     });
   } catch (_error) {
     e = _error;
     showErr(e);
+    err = e;
   }
-  return false;
+  caro.executeIfFn(cb, err, data);
+  return data;
 };
 
 
@@ -35,8 +40,8 @@ self.readFile = function(path, encoding, flag) {
  * write data to file, return false if failed
  * @param {string} path
  * @param {*} data
- * @param {?string} [encoding=utf8]
- * @param {?string} [flag=null]
+ * @param {string} [encoding=utf8]
+ * @param {string} [flag=null]
  * @returns {*}
  */
 
