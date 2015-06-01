@@ -26,9 +26,10 @@ describe 'Dir', ->
   it 'createDir', ->
     r = cf.createDir('1/a', '2',
       (e, path) ->
-        cf.deleteFs('1', '2', true)
         path = path == '1/a' or path == '2'
         e.should.be.false
         path.should.be.true
     );
+    r2 = cf.deleteFs('1', '2', true)
     r.should.be.true
+    r2.should.be.true

@@ -18,15 +18,17 @@ describe 'File', ->
     r = cf.writeFile('./test.coffee', '中文', (e) ->
       e.should.be.false
     );
-    cf.deleteFs('./test.coffee');
+    r2 = cf.deleteFs('./test.coffee');
     r.should.be.true
+    r2.should.be.true
 
   it 'copyFile', ->
     r = cf.copyFile('caro-fs.js', 'test.js', (e) ->
       e.should.be.false
     );
-    cf.deleteFs('test.js');
-    r.should.be.a('boolean')
+    r2 = cf.deleteFs('test.js');
+    r.should.be.true
+    r2.should.be.true
 
     r2 = cf.copyFile('Penguins.jpg', 'test.jpg', (e) ->
       e.should.be.a('object')

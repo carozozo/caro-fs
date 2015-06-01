@@ -53,11 +53,10 @@ describe 'Utility', ->
   it 'deleteFs', ->
     (createTestFile = ()->
       cf.createDir('1/2')
-      data = cf.readFile('caro-fs.js')
-      cf.writeFile('caro-fs2.js', data)
+      cf.writeFile('test.js', 'test')
     )();
-    r = cf.deleteFs('1', 'caro-fs2.js', (e, path) ->
-      path = path == '1' or path == 'caro-fs2.js'
+    r = cf.deleteFs('1', 'test.js', (e, path) ->
+      path = path == '1' or path == 'test.js'
       e.should.be.failse
       path.should.be.true
     , true);
@@ -79,16 +78,17 @@ describe 'Utility', ->
       path1.should.eq('./1/2')
       path2.should.eq('3/4')
     , true);
-    cf.deleteFs('1', '3', true)
     r2 = cf.renameFs(
       ['a', 'b/c'],
       ['2.js', 'd/2.js'],
       (e, path1, path2) ->
         e.should.be.a('object')
-        path1 = path1 == 'a' or path1=='2.js'
-        path2 = path2 == 'b/c' or path2=='d/2.js'
+        path1 = path1 == 'a' or path1 == '2.js'
+        path2 = path2 == 'b/c' or path2 == 'd/2.js'
         path1.should.be.true
         path2.should.be.true
     );
+    r3 = cf.deleteFs('1', '3', true)
     r.should.be.true
     r2.should.be.false
+    r3.should.be.true
