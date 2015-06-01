@@ -12,7 +12,7 @@
 self.isDir = function(path, cb) {
   var aPath, allPass, args;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -48,7 +48,7 @@ self.isDir = function(path, cb) {
 self.isFile = function(path) {
   var aPath, allPass, args, cb;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -84,7 +84,7 @@ self.isFile = function(path) {
 self.isSymlink = function(path) {
   var aPath, allPass, args, cb;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {

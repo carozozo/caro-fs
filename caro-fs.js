@@ -3,7 +3,7 @@
  * Caro-FS
  * @author Caro.Huang
  */
-var caro, fileSizeUnits1, fileSizeUnits2, getArgs, getFileSize, nFs, nPath, self, showErr, traceMode;
+var caro, fileSizeUnits1, fileSizeUnits2, getFileSize, nFs, nPath, self, showErr, traceMode;
 
 self = {};
 
@@ -18,48 +18,6 @@ caro = require('caro');
 fileSizeUnits1 = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
 fileSizeUnits2 = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-
-getArgs = function(args) {
-  var aArr, aBool, aFn, aNum, aObj, aStr;
-  aStr = [];
-  aFn = [];
-  aBool = [];
-  aArr = [];
-  aNum = [];
-  aObj = [];
-  caro.forEach(args, function(arg) {
-    if (caro.isFunction(arg)) {
-      aFn.push(arg);
-      return;
-    }
-    if (caro.isBoolean(arg)) {
-      aBool.push(arg);
-      return;
-    }
-    if (caro.isString(arg)) {
-      aStr.push(arg);
-      return;
-    }
-    if (caro.isArray(arg)) {
-      aArr.push(arg);
-      return;
-    }
-    if (caro.isNumber(arg)) {
-      aNum.push(arg);
-    }
-    if (caro.isPlainObject(arg)) {
-      return aObj.push(arg);
-    }
-  });
-  return {
-    fn: aFn,
-    bool: aBool,
-    str: aStr,
-    arr: aArr,
-    num: aNum,
-    obj: aObj
-  };
-};
 
 showErr = function(e) {
   if (traceMode) {
@@ -115,7 +73,7 @@ coverToFalseIfEmptyArr = function(arr) {
 self.isEmptyDir = function(path, cb) {
   var aPath, args, pass;
   pass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -239,7 +197,7 @@ self.createDir = function(path, cb) {
   var aPath, args, createDir, err, pass;
   err = [];
   pass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   createDir = function(dirPath) {
@@ -290,7 +248,7 @@ self.readFile = function(path, cb, opt) {
   var args, data, e, encoding, err, flag;
   data = null;
   err = false;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
   encoding = opt.encoding || null;
@@ -325,7 +283,7 @@ self.readFile = function(path, cb, opt) {
 self.writeFile = function(path, data, cb, opt) {
   var args, e, encoding, err, flag, mode;
   err = false;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
   encoding = opt.encoding || null;
@@ -362,7 +320,7 @@ self.writeFile = function(path, data, cb, opt) {
 self.copyFile = function(path, newPath, cb, opt) {
   var args, data, e, err;
   err = false;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
   try {
@@ -402,7 +360,7 @@ self.getFsSize = function(path, fixed, unit) {
     return bytes;
   }
   args = caro.drop(arguments);
-  args = getArgs(args);
+  args = caro.classify(args);
   fixed = caro.toInteger(args.num[0]);
   fixed = fixed > -1 ? fixed : 1;
   unit = args.str[0];
@@ -604,7 +562,7 @@ self.coverToFullPath = function(path) {
 self.isDir = function(path, cb) {
   var aPath, allPass, args;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -640,7 +598,7 @@ self.isDir = function(path, cb) {
 self.isFile = function(path) {
   var aPath, allPass, args, cb;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -676,7 +634,7 @@ self.isFile = function(path) {
 self.isSymlink = function(path) {
   var aPath, allPass, args, cb;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -769,7 +727,7 @@ self.getStat = function(path, type) {
 self.exists = function(path, cb) {
   var aPath, allPass, args;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -804,7 +762,7 @@ self.exists = function(path, cb) {
 self.isDir = function(path, cb) {
   var aPath, allPass, args;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -840,7 +798,7 @@ self.isDir = function(path, cb) {
 self.isFile = function(path) {
   var aPath, allPass, args, cb;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -876,7 +834,7 @@ self.isFile = function(path) {
 self.isSymlink = function(path) {
   var aPath, allPass, args, cb;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -933,7 +891,7 @@ self.deleteFs = function(path, cb, force) {
   var aPath, args, deleteFileOrDir, err, pass, tryAndCatchErr;
   err = [];
   pass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   force = args.bool[0] || false;
@@ -992,7 +950,7 @@ self.renameFs = function(path, newPath, cb, force) {
   var aPathMap, args, pass;
   pass = true;
   aPathMap = [];
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   cb = args.fn[0];
   force = args.bool[0] || false;
   aPathMap = (function() {

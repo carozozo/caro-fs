@@ -27,37 +27,6 @@ fileSizeUnits2 = [
   'ZiB'
   'YiB'
 ]
-getArgs = (args) ->
-  aStr = []
-  aFn = []
-  aBool = []
-  aArr = []
-  aNum = []
-  aObj = []
-  caro.forEach(args, (arg) ->
-    if caro.isFunction(arg)
-      aFn.push arg
-      return
-    if caro.isBoolean(arg)
-      aBool.push arg
-      return
-    if caro.isString(arg)
-      aStr.push arg
-      return
-    if caro.isArray(arg)
-      aArr.push arg
-      return
-    if caro.isNumber(arg)
-      aNum.push arg
-    if caro.isPlainObject(arg)
-      aObj.push(arg)
-  )
-  fn: aFn
-  bool: aBool
-  str: aStr
-  arr: aArr
-  num: aNum
-  obj: aObj
 showErr = (e) ->
   console.error(e) if traceMode
 getFileSize = (path) ->

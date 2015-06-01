@@ -14,7 +14,7 @@
 self.readFile = (path, cb, opt) ->
   data = null
   err = false
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
   encoding = opt.encoding or null
@@ -43,7 +43,7 @@ self.readFile = (path, cb, opt) ->
 ###
 self.writeFile = (path, data, cb, opt) ->
   err = false
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
   encoding = opt.encoding or null
@@ -73,7 +73,7 @@ self.writeFile = (path, data, cb, opt) ->
 ###
 self.copyFile = (path, newPath, cb, opt) ->
   err = false
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
   try
@@ -99,7 +99,7 @@ self.getFsSize = (path, fixed = 1, unit) ->
   bytes = getFileSize(path)
   return bytes if bytes == null
   args = caro.drop(arguments)
-  args = getArgs(args)
+  args = caro.classify(args)
   fixed = caro.toInteger(args.num[0])
   fixed = if fixed > -1 then fixed else 1
   unit = args.str[0]

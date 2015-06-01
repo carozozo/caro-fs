@@ -16,7 +16,7 @@ self.readFile = function(path, cb, opt) {
   var args, data, e, encoding, err, flag;
   data = null;
   err = false;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
   encoding = opt.encoding || null;
@@ -51,7 +51,7 @@ self.readFile = function(path, cb, opt) {
 self.writeFile = function(path, data, cb, opt) {
   var args, e, encoding, err, flag, mode;
   err = false;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
   encoding = opt.encoding || null;
@@ -88,7 +88,7 @@ self.writeFile = function(path, data, cb, opt) {
 self.copyFile = function(path, newPath, cb, opt) {
   var args, data, e, err;
   err = false;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
   try {
@@ -128,7 +128,7 @@ self.getFsSize = function(path, fixed, unit) {
     return bytes;
   }
   args = caro.drop(arguments);
-  args = getArgs(args);
+  args = caro.classify(args);
   fixed = caro.toInteger(args.num[0]);
   fixed = fixed > -1 ? fixed : 1;
   unit = args.str[0];

@@ -9,7 +9,7 @@
 ###
 self.isDir = (path, cb) ->
   allPass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
@@ -37,7 +37,7 @@ self.isDir = (path, cb) ->
 ###
 self.isFile = (path) ->
   allPass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
@@ -65,7 +65,7 @@ self.isFile = (path) ->
 ###
 self.isSymlink = (path) ->
   allPass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->

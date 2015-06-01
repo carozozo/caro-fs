@@ -36,7 +36,7 @@ self.getStat = (path, type = 'l') ->
 ###
 self.exists = (path, cb) ->
   allPass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
@@ -63,7 +63,7 @@ self.exists = (path, cb) ->
 ###
 self.isDir = (path, cb) ->
   allPass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
@@ -91,7 +91,7 @@ self.isDir = (path, cb) ->
 ###
 self.isFile = (path) ->
   allPass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
@@ -119,7 +119,7 @@ self.isFile = (path) ->
 ###
 self.isSymlink = (path) ->
   allPass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
@@ -163,7 +163,7 @@ self.getFileType = (path) ->
 self.deleteFs = (path, cb, force) ->
   err = []
   pass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   force = args.bool[0] or false
@@ -209,7 +209,7 @@ self.deleteFs = (path, cb, force) ->
 self.renameFs = (path, newPath, cb, force) ->
   pass = true
   aPathMap = []
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   cb = args.fn[0]
   force = args.bool[0] or false
   aPathMap = do ->

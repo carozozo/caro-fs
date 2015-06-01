@@ -47,7 +47,7 @@ self.getStat = function(path, type) {
 self.exists = function(path, cb) {
   var aPath, allPass, args;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -82,7 +82,7 @@ self.exists = function(path, cb) {
 self.isDir = function(path, cb) {
   var aPath, allPass, args;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -118,7 +118,7 @@ self.isDir = function(path, cb) {
 self.isFile = function(path) {
   var aPath, allPass, args, cb;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -154,7 +154,7 @@ self.isFile = function(path) {
 self.isSymlink = function(path) {
   var aPath, allPass, args, cb;
   allPass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -211,7 +211,7 @@ self.deleteFs = function(path, cb, force) {
   var aPath, args, deleteFileOrDir, err, pass, tryAndCatchErr;
   err = [];
   pass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   force = args.bool[0] || false;
@@ -270,7 +270,7 @@ self.renameFs = function(path, newPath, cb, force) {
   var aPathMap, args, pass;
   pass = true;
   aPathMap = [];
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   cb = args.fn[0];
   force = args.bool[0] || false;
   aPathMap = (function() {

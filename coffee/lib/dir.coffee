@@ -13,7 +13,7 @@ coverToFalseIfEmptyArr = (arr) ->
 ###
 self.isEmptyDir = (path, cb) ->
   pass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   caro.forEach(aPath, (path) ->
@@ -103,7 +103,7 @@ self.readDir = (path, cb, opt = {}) ->
 self.createDir = (path, cb) ->
   err = []
   pass = true
-  args = getArgs(arguments)
+  args = caro.classify(arguments)
   aPath = args.str
   cb = args.fn[0]
   createDir = (dirPath) ->

@@ -22,7 +22,7 @@ coverToFalseIfEmptyArr = function(arr) {
 self.isEmptyDir = function(path, cb) {
   var aPath, args, pass;
   pass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   caro.forEach(aPath, function(path) {
@@ -146,7 +146,7 @@ self.createDir = function(path, cb) {
   var aPath, args, createDir, err, pass;
   err = [];
   pass = true;
-  args = getArgs(arguments);
+  args = caro.classify(arguments);
   aPath = args.str;
   cb = args.fn[0];
   createDir = function(dirPath) {
