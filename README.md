@@ -60,7 +60,7 @@ var r2 = cf.createDir('./\/test','test2/sub_test', function (err, path){
 - **readFile(path [cb] [opt]) - read file content**
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
-var r = cf.readFile('./caro-fs.js'); // string of data or false
+var r = cf.readFile('./caro-fs.js'); // string of data or null
 var r2 = cf.readFile('./caro-fs.js', function(e, data) {
     // catch error and data
 },{

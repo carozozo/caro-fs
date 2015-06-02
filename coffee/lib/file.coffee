@@ -17,13 +17,8 @@ self.readFile = (path, cb, opt) ->
   args = caro.classify(arguments);
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
-  encoding = opt.encoding or null
-  flag = opt.flag or null
   try
-    data = nFs.readFileSync(path,
-      encoding: encoding
-      flag: flag
-    )
+    data = nFs.readFileSync(path, opt, cb)
   catch e
     showErr(e)
     err = e
@@ -46,14 +41,8 @@ self.writeFile = (path, data, cb, opt) ->
   args = caro.classify(arguments);
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
-  encoding = opt.encoding or null
-  flag = opt.flag or null
-  mode = opt.mode or null
   try
-    nFs.writeFileSync path, data,
-      encoding: encoding
-      flag: flag
-      mode: mode
+    nFs.writeFileSync(path, data, opt)
     return true
   catch e
     showErr(e)

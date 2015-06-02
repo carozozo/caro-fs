@@ -13,19 +13,14 @@
  * @returns {*}
  */
 self.readFile = function(path, cb, opt) {
-  var args, data, e, encoding, err, flag;
+  var args, data, e, err;
   data = null;
   err = false;
   args = caro.classify(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
-  encoding = opt.encoding || null;
-  flag = opt.flag || null;
   try {
-    data = nFs.readFileSync(path, {
-      encoding: encoding,
-      flag: flag
-    });
+    data = nFs.readFileSync(path, opt, cb);
   } catch (_error) {
     e = _error;
     showErr(e);
@@ -49,20 +44,13 @@ self.readFile = function(path, cb, opt) {
  */
 
 self.writeFile = function(path, data, cb, opt) {
-  var args, e, encoding, err, flag, mode;
+  var args, e, err;
   err = false;
   args = caro.classify(arguments);
   opt = args.obj[0] || {};
   cb = args.fn[0] || null;
-  encoding = opt.encoding || null;
-  flag = opt.flag || null;
-  mode = opt.mode || null;
   try {
-    nFs.writeFileSync(path, data, {
-      encoding: encoding,
-      flag: flag,
-      mode: mode
-    });
+    nFs.writeFileSync(path, data, opt);
     return true;
   } catch (_error) {
     e = _error;
