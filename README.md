@@ -1,5 +1,6 @@
 # Caro-FS
-[![Build Status](https://travis-ci.org/carozozo/caro-fs.svg?branch=master)](https://travis-ci.org/carozozo/caro-fs)   
+[![Build Status](https://travis-ci.org/carozozo/caro-fs.svg?branch=master)](https://travis-ci.org/carozozo/caro-fs)
+
 The FileSystem Operator
 
 ## Install and Usage
