@@ -62,7 +62,7 @@ var r2 = cf.createDir('./\/test','test2/sub_test', function (err, path){
 ```javascript
 // https://nodejs.org/api/fs.html#fs_fs_readfilesync_filename_options
 var r = cf.readFile('./caro-fs.js'); // string of data or null
-var r2 = cf.readFile('./caro-fs.js', function(e, data) {
+var r2 = cf.readFile('./caro-fs.js', function(err, data) {
     // catch error and data
 },{
     encoding: null,
