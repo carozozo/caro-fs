@@ -2,7 +2,7 @@ do ->
 describe 'File', ->
   it 'readFile', ->
     r = cf.readFile(__dirname + '/file_test2.coffee', (e, data) ->
-      e.should.be.a('object')
+      e.should.not.be.false
       should.equal(data, null)
     )
     should.equal(r, null)
@@ -29,7 +29,7 @@ describe 'File', ->
     r2.should.be.true
 
     r2 = cf.copyFile('Penguins.jpg', 'test.jpg', (e) ->
-      e.should.be.a('object')
+      e.should.not.be.false
     )
     r2.should.be.false
 

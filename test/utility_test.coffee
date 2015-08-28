@@ -82,7 +82,7 @@ describe 'Utility', ->
       ['a', 'b/c'],
       ['2.js', 'd/2.js'],
       (e, path1, path2) ->
-        e.should.be.a('object')
+        e.should.not.be.false
         path1 = path1 == 'a' or path1 == '2.js'
         path2 = path2 == 'b/c' or path2 == 'd/2.js'
         path1.should.be.true
