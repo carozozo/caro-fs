@@ -1,6 +1,6 @@
 {
   "name": "caro-fs",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "The File-System operator module",
   "author": {
     "name": "Caro.Huang",
@@ -28,11 +28,12 @@
     "caro": "latest"
   },
   "devDependencies": {
-    "chai": "~2.3.0",
-    "coffee-script": "~1.9.3",
-    "grunt": "~0.4.5",
-    "grunt-contrib-coffee": "~0.13.0",
-    "grunt-mocha-test": "~0.12.7",
-    "mocha": "~2.2.4"
+    "chai": "latest",
+    "coffee-script": "latest",
+    "coffeelint": "latest",
+    "grunt": "latest",
+    "grunt-contrib-coffee": "latest",
+    "grunt-mocha-test": "latest",
+    "mocha": "latest"
   }
 }

@@ -14,7 +14,7 @@
 self.readFile = (path, cb, opt) ->
   data = null
   err = false
-  args = caro.classify(arguments);
+  args = caro.classify(arguments)
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
   try
@@ -38,7 +38,7 @@ self.readFile = (path, cb, opt) ->
 ###
 self.writeFile = (path, data, cb, opt) ->
   err = false
-  args = caro.classify(arguments);
+  args = caro.classify(arguments)
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
   try
@@ -62,7 +62,7 @@ self.writeFile = (path, data, cb, opt) ->
 ###
 self.copyFile = (path, newPath, cb, opt) ->
   err = false
-  args = caro.classify(arguments);
+  args = caro.classify(arguments)
   opt = args.obj[0] or {}
   cb = args.fn[0] or null
   try
